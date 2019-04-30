@@ -1,0 +1,4 @@
+{
+	"controller_type": "PDDL",
+	"plan_path": "../res/planning.txt"
+}

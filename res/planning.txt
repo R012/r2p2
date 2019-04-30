@@ -1,0 +1,106 @@
+These are just test lines.
+
+They should not break the program
+At all
+
+% But better safe than sorry
+
+% 0.000: ( crash )
+
+% Let's see what happens
+
+
+
+0: (move r p0000 p3035)
+
+0: (move r p3035 p3034)
+
+0: (move r p3034 p3033)
+
+0: (move r p3033 p3032)
+
+0: (move r p3032 p3031)
+
+0: (move r p3031 p3030)
+
+7: (move_north )
+
+8: (move_east )
+
+9: (move_east )
+
+10: (recharge_batteries )
+
+11: (recharge_batteries )
+
+12: (recharge_batteries )
+
+13: (recharge_batteries )
+
+14: (recharge_batteries )
+
+15: (recharge_batteries )
+
+17: (move_north )
+
+18: (move_north )
+
+19: (move_north )
+
+16: (take_picture )
+
+20: (move_north )
+
+21: (move_north )
+
+10: (recharge_batteries )
+
+11: (recharge_batteries )
+
+12: (recharge_batteries )
+
+13: (recharge_batteries )
+
+14: (recharge_batteries )
+
+15: (recharge_batteries )
+
+10: (recharge_batteries )
+
+11: (recharge_batteries )
+
+12: (recharge_batteries )
+
+13: (recharge_batteries )
+
+14: (recharge_batteries )
+
+15: (recharge_batteries )
+
+10: (recharge_batteries )
+
+11: (recharge_batteries )
+
+12: (recharge_batteries )
+
+13: (recharge_batteries )
+
+14: (recharge_batteries )
+
+15: (recharge_batteries )
+
+21: (move_west )
+
+21: (move_west )
+
+21: (move_north )
+
+21: (move_north )
+
+22: (get_co2_reading )
+
+21: (move_west )
+
+21: (move_north )
+
+23: (drill)

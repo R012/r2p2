@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.5.3" />
+<title>pddl_executor API documentation</title>
+<meta name="description" content="This module defines what a pddl executor is, from a data-structure POV …" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.name small{font-weight:normal}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase;cursor:pointer}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title"><code>pddl_executor</code> module</h1>
+</header>
+<section id="section-intro">
+<p>This module defines what a pddl executor is, from a data-structure POV.</p>
+<p>This module contains the definition and implementation of the PDDL_Executor
+class.</p>
+<p>This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with
+this program. If not, see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>.</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="pddl_executor.create_pddl_executor"><code class="name flex">
+<span>def <span class="ident">create_pddl_executor</span></span>(<span>f)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Factory to create PDDL_Executor objects.</p>
+<h2 id="inputs">Inputs</h2>
+<ul>
+<li>f: dictionary containing the following:<ul>
+<li>the parameters required to instance a PDDL_Executor. Refer to <a title="pddl_executor.PDDL_Executor.__init__" href="#pddl_executor.PDDL_Executor.__init__"><code>PDDL_Executor.__init__()</code></a> for more information.</li>
+<li>co2_center: numeric 1D array of length two, defining the x, y center of the CO2 source for this scenario.</li>
+<li>co2_radius: numeric value identifying the radius in which the CO2 extends.</li>
+</ul>
+</li>
+</ul>
+<h2 id="outputs">Outputs</h2>
+<ul>
+<li>a fully configured PDDL_Executor object.</li>
+</ul></section>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="pddl_executor.PDDL_Executor"><code class="flex name class">
+<span>class <span class="ident">PDDL_Executor</span></span>
+<span>(</span><span><small>ancestors:</small> <a title="controller.Controller" href="controller.html#controller.Controller">Controller</a>, abc.ABC)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Class defining what a PDDL_Executor is.
+This class takes in a planning configuration, including the data used to generate said planning,
+and executes the result in order to display it graphically.
+Battery issues can be avoided simply y setting costs to 0 and battery to 1, making it unnecessary
+to recharge.</p></section>
+<h3>Methods</h3>
+<dl>
+<dt id="pddl_executor.PDDL_Executor.__init__"><code class="name flex">
+<span>def <span class="ident">__init__</span></span>(<span>self, step, battery, charging_rate, movement_cost, reading_cost, picture_cost, filepath)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Constructor for the PDDL_Executor.
+Aside from a filepath to the planning to be executed, it takes in
+several parameters that help conceptualize the robot to be controlled.</p>
+<h2 id="inputs">Inputs</h2>
+<ul>
+<li>step: amount of pixels the robot moves in a single step.</li>
+<li>battery: max battery, as well as initial battery level.</li>
+<li>charging_rate: amount of battery recharged per time step recharging battery.</li>
+<li>movement_cost: amount of battery that must be spent in order to move.</li>
+<li>reading_cost: amount of battery that must be spent in order to perform a CO2
+reading.</li>
+<li>picture_cost: amount of battery that must be spent in order to take a picture.</li>
+<li>filepath: path to the file contaning the planning that will be executed.</li>
+</ul></section>
+</dd>
+<dt id="pddl_executor.PDDL_Executor.control"><code class="name flex">
+<span>def <span class="ident">control</span></span>(<span>self, ang, dst)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Executes the next task in queue. Always returns 0, 0 to the robot,
+instead handling the entirety of the execution of the task on its
+own.</p></section>
+</dd>
+<dt id="pddl_executor.PDDL_Executor.get_co2_reading"><code class="name flex">
+<span>def <span class="ident">get_co2_reading</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Gathers a reading of CO2 in the current position of the robot,
+if there is enough battery for it.</p></section>
+</dd>
+<dt id="pddl_executor.PDDL_Executor.move_east"><code class="name flex">
+<span>def <span class="ident">move_east</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Moves the robot east, if there is enough battery for it.</p></section>
+</dd>
+<dt id="pddl_executor.PDDL_Executor.move_north"><code class="name flex">
+<span>def <span class="ident">move_north</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Moves the robot north, if there is enough battery for it.</p></section>
+</dd>
+<dt id="pddl_executor.PDDL_Executor.move_south"><code class="name flex">
+<span>def <span class="ident">move_south</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Moves the robot south, if there is enough battery for it.</p></section>
+</dd>
+<dt id="pddl_executor.PDDL_Executor.move_west"><code class="name flex">
+<span>def <span class="ident">move_west</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Moves the robot west, if there is enough battery for it.</p></section>
+</dd>
+<dt id="pddl_executor.PDDL_Executor.recharge_batteries"><code class="name flex">
+<span>def <span class="ident">recharge_batteries</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Recharges the robot's batteries.</p></section>
+</dd>
+<dt id="pddl_executor.PDDL_Executor.take_picture"><code class="name flex">
+<span>def <span class="ident">take_picture</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Takes a picture, if there is enough battery for it.</p></section>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="controller.Controller" href="controller.html#controller.Controller">Controller</a></b></code>:
+<ul class="hlist">
+<li><code><a title="controller.Controller.goal_oriented" href="controller.html#controller.Controller.goal_oriented">goal_oriented</a></code></li>
+<li><code><a title="controller.Controller.handle_collision" href="controller.html#controller.Controller.handle_collision">handle_collision</a></code></li>
+<li><code><a title="controller.Controller.has_cur_detected_edge_list" href="controller.html#controller.Controller.has_cur_detected_edge_list">has_cur_detected_edge_list</a></code></li>
+<li><code><a title="controller.Controller.has_edge_list" href="controller.html#controller.Controller.has_edge_list">has_edge_list</a></code></li>
+<li><code><a title="controller.Controller.on_collision" href="controller.html#controller.Controller.on_collision">on_collision</a></code></li>
+<li><code><a title="controller.Controller.register_robot" href="controller.html#controller.Controller.register_robot">register_robot</a></code></li>
+<li><code><a title="controller.Controller.write_info_to_log" href="controller.html#controller.Controller.write_info_to_log">write_info_to_log</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="pddl_executor.create_pddl_executor" href="#pddl_executor.create_pddl_executor">create_pddl_executor</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="pddl_executor.PDDL_Executor" href="#pddl_executor.PDDL_Executor">PDDL_Executor</a></code></h4>
+<ul class="two-column">
+<li><code><a title="pddl_executor.PDDL_Executor.__init__" href="#pddl_executor.PDDL_Executor.__init__">__init__</a></code></li>
+<li><code><a title="pddl_executor.PDDL_Executor.control" href="#pddl_executor.PDDL_Executor.control">control</a></code></li>
+<li><code><a title="pddl_executor.PDDL_Executor.get_co2_reading" href="#pddl_executor.PDDL_Executor.get_co2_reading">get_co2_reading</a></code></li>
+<li><code><a title="pddl_executor.PDDL_Executor.move_east" href="#pddl_executor.PDDL_Executor.move_east">move_east</a></code></li>
+<li><code><a title="pddl_executor.PDDL_Executor.move_north" href="#pddl_executor.PDDL_Executor.move_north">move_north</a></code></li>
+<li><code><a title="pddl_executor.PDDL_Executor.move_south" href="#pddl_executor.PDDL_Executor.move_south">move_south</a></code></li>
+<li><code><a title="pddl_executor.PDDL_Executor.move_west" href="#pddl_executor.PDDL_Executor.move_west">move_west</a></code></li>
+<li><code><a title="pddl_executor.PDDL_Executor.recharge_batteries" href="#pddl_executor.PDDL_Executor.recharge_batteries">recharge_batteries</a></code></li>
+<li><code><a title="pddl_executor.PDDL_Executor.take_picture" href="#pddl_executor.PDDL_Executor.take_picture">take_picture</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.5.3</a>.</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.5.3" />
+<title>path_planning API documentation</title>
+<meta name="description" content="This module defines general path planning utilities …" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.name small{font-weight:normal}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase;cursor:pointer}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title"><code>path_planning</code> module</h1>
+</header>
+<section id="section-intro">
+<p>This module defines general path planning utilities.</p>
+<p>It accounts for two different kinds environments over which to perform
+path planning: grid-based, and navigation mesh-based.</p>
+<p>This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with
+this program. If not, see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>.</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="path_planning.create_grid"><code class="name flex">
+<span>def <span class="ident">create_grid</span></span>(<span>npdata, divider)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Auxiliary function that generates a grid of nodes. Generally, use this rather than generate_grid.</p>
+<h2 id="inputs">Inputs</h2>
+<ul>
+<li>npdata: map data represented as an nparray.</li>
+<li>divider: number of divisions to perform per axis.</li>
+</ul>
+<h2 id="outputs">Outputs</h2>
+<ul>
+<li>fully configured grid of nodes.</li>
+</ul></section>
+</dd>
+<dt id="path_planning.generate_grid"><code class="name flex">
+<span>def <span class="ident">generate_grid</span></span>(<span>npdata, divider)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Auxiliary function that creates a grid using map data as a reference.</p>
+<h2 id="inputs">Inputs</h2>
+<ul>
+<li>npdata: map data represented as an nparray.</li>
+<li>divider: number of divisions to perform per axis.</li>
+</ul>
+<h2 id="outputs">Outputs</h2>
+<ul>
+<li>grid of numbers representing the values of each tile of the
+generated grid.</li>
+<li>width of each tile of the grid.</li>
+<li>height of each tile of the grid.</li>
+</ul></section>
+</dd>
+<dt id="path_planning.generate_navmesh"><code class="name flex">
+<span>def <span class="ident">generate_navmesh</span></span>(<span>npdata, waypoints)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Function that creates a navigation mesh, given a map and a list of waypoints.</p>
+<h2 id="inputs">Inputs</h2>
+<ul>
+<li>npdata: map data, represented as an nparray.</li>
+<li>waypoints: list of waypoints that conform the nav mesh.</li>
+</ul>
+<h2 id="outputs">Outputs</h2>
+<ul>
+<li>a fully configured nav mesh, represented as a dictionary of nodes.</li>
+</ul></section>
+</dd>
+<dt id="path_planning.generate_neighbors"><code class="name flex">
+<span>def <span class="ident">generate_neighbors</span></span>(<span>node, nodes)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Auxiliary function that calculate the neighbors of a given node within a navigation mesh.</p>
+<h2 id="inputs">Inputs</h2>
+<ul>
+<li>node: node for which to calculate the neighbors.</li>
+<li>nodes: list of all the nodes conforming the mesh.</li>
+</ul></section>
+</dd>
+<dt id="path_planning.generate_waypoints_list"><code class="name flex">
+<span>def <span class="ident">generate_waypoints_list</span></span>(<span>algo, start, finish, grid, heur=&#39;naive&#39;)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Generates an ordered list of waypoints for a controller to iterate over.</p>
+<h2 id="inputs">Inputs</h2>
+<ul>
+<li>algo: string representing the path planning algorithm to be used.</li>
+<li>start: node from which to start, represented as a tuple of coordinates.</li>
+<li>finish: goal node, represented as a tuple of coordinates.</li>
+<li>grid: grid over which to plan the path.</li>
+<li>heur: heuristic to be used, in case the algorithm requires it, represented
+as a string.</li>
+</ul>
+<h2 id="outputs">Outputs</h2>
+<ul>
+<li>ordered list of waypoints conforming the planned path.</li>
+</ul></section>
+</dd>
+<dt id="path_planning.generate_waypoints_list_mesh"><code class="name flex">
+<span>def <span class="ident">generate_waypoints_list_mesh</span></span>(<span>algo, start, finish, mesh, heur=&#39;naive&#39;)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Generates an ordered list of waypoints for a controller to iterate over.</p>
+<h2 id="inputs">Inputs</h2>
+<ul>
+<li>algo: string representing the path planning algorithm to be used.</li>
+<li>start: node from which to start, represented as a tuple of coordinates.</li>
+<li>finish: goal node, represented as a tuple of coordinates.</li>
+<li>mesh: navigation mesh over which to plan the path.</li>
+<li>heur: heuristic to be used, in case the algorithm requires it, represented
+as a string.</li>
+</ul>
+<h2 id="outputs">Outputs</h2>
+<ul>
+<li>ordered list of waypoints conforming the planned path.</li>
+</ul></section>
+</dd>
+<dt id="path_planning.register_heuristic"><code class="name flex">
+<span>def <span class="ident">register_heuristic</span></span>(<span>label, function)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Registers a new heuristic to be selected and used on runtime if
+necessary.</p>
+<h2 id="inputs">Inputs</h2>
+<ul>
+<li>label: string representing the heuristic. Can have any sort
+of format, provided that the host admits it.</li>
+<li>function: function pointer to the function implementing the
+heuristic in question.</li>
+</ul></section>
+</dd>
+<dt id="path_planning.register_search_method"><code class="name flex">
+<span>def <span class="ident">register_search_method</span></span>(<span>label, function)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Registers a new search method to be selected and used on runtime
+if necessary.</p>
+<h2 id="inputs">Inputs</h2>
+<ul>
+<li>label: string representing the function. Can have any sort
+of format, provided that the host admits it.</li>
+<li>function: function pointer to the function implementing the
+search method in question.</li>
+</ul></section>
+</dd>
+<dt id="path_planning.run_path_planning"><code class="name flex">
+<span>def <span class="ident">run_path_planning</span></span>(<span>grid_size, algo=&#39;A*&#39;, start=(1, 1), finish=(2, 2), heur=&#39;naive&#39;)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Configures and runs a given path planning algorithm over a grid.</p>
+<h2 id="inputs">Inputs</h2>
+<ul>
+<li>grid_size: number of divisions to perform on the simulation's map in both axis.</li>
+<li>algo: string representing the algorithm to be used.</li>
+<li>start: coordinates of the node at which to begin planning the path.</li>
+<li>finish: coordinates of the goal node.</li>
+<li>heur: heuristic to be used, if necessary, represented as a string.</li>
+</ul>
+<h2 id="outputs">Outputs</h2>
+<ul>
+<li>ordered list of nodes to be visited representing the planned path.</li>
+</ul></section>
+</dd>
+<dt id="path_planning.run_path_planning_mesh"><code class="name flex">
+<span>def <span class="ident">run_path_planning_mesh</span></span>(<span>mesh_points, algo=&#39;A* mesh&#39;, start=(1, 1), finish=(2, 2), heur=&#39;naive&#39;)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Configures and runs a given path planning algorithm over a mesh.</p>
+<h2 id="inputs">Inputs</h2>
+<ul>
+<li>mesh_points: list of waypoints that form the navigation mesh.</li>
+<li>algo: string representing the algorithm to be used.</li>
+<li>start: coordinates of the node at which to begin planning the path.</li>
+<li>finish: coordinates of the goal node.</li>
+<li>heur: heuristic to be used, if necessary, represented as a string.</li>
+</ul>
+<h2 id="outputs">Outputs</h2>
+<ul>
+<li>ordered list of nodes to be visited representing the planned path.</li>
+</ul></section>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="path_planning.create_grid" href="#path_planning.create_grid">create_grid</a></code></li>
+<li><code><a title="path_planning.generate_grid" href="#path_planning.generate_grid">generate_grid</a></code></li>
+<li><code><a title="path_planning.generate_navmesh" href="#path_planning.generate_navmesh">generate_navmesh</a></code></li>
+<li><code><a title="path_planning.generate_neighbors" href="#path_planning.generate_neighbors">generate_neighbors</a></code></li>
+<li><code><a title="path_planning.generate_waypoints_list" href="#path_planning.generate_waypoints_list">generate_waypoints_list</a></code></li>
+<li><code><a title="path_planning.generate_waypoints_list_mesh" href="#path_planning.generate_waypoints_list_mesh">generate_waypoints_list_mesh</a></code></li>
+<li><code><a title="path_planning.register_heuristic" href="#path_planning.register_heuristic">register_heuristic</a></code></li>
+<li><code><a title="path_planning.register_search_method" href="#path_planning.register_search_method">register_search_method</a></code></li>
+<li><code><a title="path_planning.run_path_planning" href="#path_planning.run_path_planning">run_path_planning</a></code></li>
+<li><code><a title="path_planning.run_path_planning_mesh" href="#path_planning.run_path_planning_mesh">run_path_planning_mesh</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.5.3</a>.</p>
+</footer>
+</body>
+</html>

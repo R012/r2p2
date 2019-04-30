@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.5.3" />
+<title>robot API documentation</title>
+<meta name="description" content="This module defines what a robot is, from a data-structure POV …" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.name small{font-weight:normal}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase;cursor:pointer}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title"><code>robot</code> module</h1>
+</header>
+<section id="section-intro">
+<p>This module defines what a robot is, from a data-structure POV.</p>
+<p>This module contains the definition and implementation of the Robot class. It
+is also in charge of defining the physical behavior of both the robot and its
+sensors, and how to handle its general functioning. Do not modify it unless
+you know what you are doing.</p>
+<p>This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with
+this program. If not, see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>.</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="robot.Robot"><code class="flex name class">
+<span>class <span class="ident">Robot</span></span>
+</code></dt>
+<dd>
+<section class="desc"><p>Class defining the properties of a robot, as well as its physical behavior. Used for simulation purposes.
+Aside from providing abstractions representing odometry, as well as other low level details (such as sensors,
+or movement systems), this class integrates with the Controller class. Both are part of a whole, and only
+kept separate for the sake of code clarity.</p></section>
+<h3>Methods</h3>
+<dl>
+<dt id="robot.Robot.__init__"><code class="name flex">
+<span>def <span class="ident">__init__</span></span>(<span>self, identifier=-1, x=0, y=0, orientation=0, speed=0, max_speed=2, acceleration=0, sensors=8, vision_range=(0, 10000), radius=1, controller=&lt;controller.Controller object at 0x02FF1F70&gt;)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Constructor function for the Robot class. Not only does it asign the corresponding values to all parameters,
+it also performs secondary initialization operations, such as registering the robot to its controller.
+Most parameters are self explanatory.
+sensors can either be an integer (representing how many sensors the robot has, assumed to be spaced out evenly),
+or a list of integers (representing the angles to which the robot's sensors are oriented, expressed in degrees.</p></section>
+</dd>
+<dt id="robot.Robot.brake"><code class="name flex">
+<span>def <span class="ident">brake</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Instructs the robot to brake. This braking is proportional to its current acceleration and speed,
+and impacts only its acceleration.</p></section>
+</dd>
+<dt id="robot.Robot.change_acceleration"><code class="name flex">
+<span>def <span class="ident">change_acceleration</span></span>(<span>self, acceleration)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Instructs the robot to change its acceleration to a specific value.
+It should be noted that this is the main way to control its speed.</p></section>
+</dd>
+<dt id="robot.Robot.check_sensors"><code class="name flex">
+<span>def <span class="ident">check_sensors</span></span>(<span>self, env)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Requests the robot to check its environment using its sensors, and then returns the result.</p>
+<h2 id="inputs">Inputs</h2>
+<ul>
+<li>env: Matrix data representing the environment. MUST BE AN NPARRAY.</li>
+</ul>
+<h2 id="outputs">Outputs</h2>
+<ul>
+<li>col: list of detected collision points.</li>
+<li>dst: list of distances to the detected collision points.</li>
+<li>ang: list of actual angles explored.</li>
+</ul></section>
+</dd>
+<dt id="robot.Robot.collide"><code class="name flex">
+<span>def <span class="ident">collide</span></span>(<span>self, spot)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Method that asks the robot to register a collision at a specific spot (represented as a (x, y) tuple).
+Kept public for the sake of providing more possibilities to controllers, as a way, for instance, to penalize
+specific behaviors.</p></section>
+</dd>
+<dt id="robot.Robot.control"><code class="name flex">
+<span>def <span class="ident">control</span></span>(<span>self, env, delta)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Robot's main control loop. It always handles sensor checking before actually requesting instructions to its
+controller.</p></section>
+</dd>
+<dt id="robot.Robot.output_sensor_data"><code class="name flex">
+<span>def <span class="ident">output_sensor_data</span></span>(<span>self, ang, dst)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Requests the robot to display its sensor data on stdout.
+DO NOT USE IN THE UPDATE LOOP. It will cause performance issues due to console being busy and slow to write to.</p></section>
+</dd>
+<dt id="robot.Robot.print_stats"><code class="name flex">
+<span>def <span class="ident">print_stats</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Auxiliary method that requests the robot to print its stats on stdout.
+DO NOT USE IN THE UPDATE LOOP. It will cause performance issues due to the console being busy and slow to write too.</p></section>
+</dd>
+<dt id="robot.Robot.stop"><code class="name flex">
+<span>def <span class="ident">stop</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Instructs the robot to stop dead on its tracks. Essentially, the equivalent of making it
+forcibly stop its wheels.</p></section>
+</dd>
+<dt id="robot.Robot.turn"><code class="name flex">
+<span>def <span class="ident">turn</span></span>(<span>self, angle=0)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Instructs the robot to turn a specific angle. Best left alone unless you know exactly what you are doing.</p></section>
+</dd>
+<dt id="robot.Robot.update"><code class="name flex">
+<span>def <span class="ident">update</span></span>(<span>self, env, delta)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Controller driver.
+- env: environment data, represented as a matrix
+- delta: time ellapsed since the last update</p></section>
+</dd>
+<dt id="robot.Robot.write_stats_to_log"><code class="name flex">
+<span>def <span class="ident">write_stats_to_log</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Auxiliary method used to dump current robot stats into a log, effectively creating a snapshot of its current state.
+This proccess includes writing the robot's controller's current stats to the log, should they be relevant, as determined by the
+controller itself.</p></section>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="robot.Robot" href="#robot.Robot">Robot</a></code></h4>
+<ul class="two-column">
+<li><code><a title="robot.Robot.__init__" href="#robot.Robot.__init__">__init__</a></code></li>
+<li><code><a title="robot.Robot.brake" href="#robot.Robot.brake">brake</a></code></li>
+<li><code><a title="robot.Robot.change_acceleration" href="#robot.Robot.change_acceleration">change_acceleration</a></code></li>
+<li><code><a title="robot.Robot.check_sensors" href="#robot.Robot.check_sensors">check_sensors</a></code></li>
+<li><code><a title="robot.Robot.collide" href="#robot.Robot.collide">collide</a></code></li>
+<li><code><a title="robot.Robot.control" href="#robot.Robot.control">control</a></code></li>
+<li><code><a title="robot.Robot.output_sensor_data" href="#robot.Robot.output_sensor_data">output_sensor_data</a></code></li>
+<li><code><a title="robot.Robot.print_stats" href="#robot.Robot.print_stats">print_stats</a></code></li>
+<li><code><a title="robot.Robot.stop" href="#robot.Robot.stop">stop</a></code></li>
+<li><code><a title="robot.Robot.turn" href="#robot.Robot.turn">turn</a></code></li>
+<li><code><a title="robot.Robot.update" href="#robot.Robot.update">update</a></code></li>
+<li><code><a title="robot.Robot.write_stats_to_log" href="#robot.Robot.write_stats_to_log">write_stats_to_log</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.5.3</a>.</p>
+</footer>
+</body>
+</html>

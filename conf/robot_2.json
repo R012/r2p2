@@ -1,0 +1,10 @@
+{
+	"id": 0,
+	"x": 193,
+	"y": 249,
+	"orientation": 0,
+	"sonar_range": [1, 25],
+	"radius": 5,
+	"sonars": 8,
+	"max_speed": 50
+}

@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.5.3" />
+<title>controller API documentation</title>
+<meta name="description" content="Module defining what a controller is from a data structure POV …" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.name small{font-weight:normal}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase;cursor:pointer}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title"><code>controller</code> module</h1>
+</header>
+<section id="section-intro">
+<p>Module defining what a controller is from a data structure POV.</p>
+<p>Aside from defining what the Controller class requires as an abstract class,
+this module provides two example controllers, as well as an abstract factory
+in order to ease instancing controllers using configuration files. Usage of
+this abstract factory is mandatory. In order to use it, just create a factory
+method that takes a dictionary as input and returns a subclass of Controller
+as output, then register the result using register_controller_factory.
+Modification of this module is heavily discouraged.</p>
+<p>This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with
+this program. If not, see <a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>.</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="controller.create_path_planning_controller"><code class="name flex">
+<span>def <span class="ident">create_path_planning_controller</span></span>(<span>f)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Factory for a PID controller which uses path planning in order to determine what waypoints must be visited.</p>
+<h2 id="inputs">Inputs</h2>
+<ul>
+<li>f: dictionary containing all necessary configuration variables, namely a list of goals, and 6 proportionality
+constants (ap, ai, ad, lp, li, ld) which will be used to define the PID controller proper (a stands for angular,
+l for linear), as well as the algorithm to be used, the start and goal points, the heuristic to be used, and
+configuration variables linked to the specific algorithm. These configuration variables must be a list of waypoints
+if the variant of the algorithm uses a navigation mesh, or a number representing the number of divisions to perform
+on each axis of the map if it's grid-based.</li>
+</ul>
+<h2 id="outputs">Outputs</h2>
+<ul>
+<li>A fully configured and ready to use Sequential_PID_Controller object.</li>
+</ul></section>
+</dd>
+<dt id="controller.create_seq_pid_controller"><code class="name flex">
+<span>def <span class="ident">create_seq_pid_controller</span></span>(<span>f)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Factory for a sequential PID controller.</p>
+<h2 id="inputs">Inputs</h2>
+<ul>
+<li>f: dictionary containing all necessary configuration variables, namely a list of goals, and 6 proportionality
+constants (ap, ai, ad, lp, li, ld) which will be used to define the PID controller proper (a stands for angular,
+l for linear).</li>
+</ul>
+<h2 id="outputs">Outputs</h2>
+<ul>
+<li>A fully configured and ready to use Sequential_PID_Controller object.</li>
+</ul></section>
+</dd>
+<dt id="controller.create_telecom_controller"><code class="name flex">
+<span>def <span class="ident">create_telecom_controller</span></span>(<span>f)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Factory for a Telecom controller.</p>
+<h2 id="inputs">Inputs</h2>
+<ul>
+<li>f: a dictionary representing all configuration parameters. Can be empty, and it will not cause errors.
+Kept in order to standardize factory input.</li>
+</ul>
+<h2 id="outputs">Outputs</h2>
+<ul>
+<li>A fully configured Telecom_Controller object.</li>
+</ul></section>
+</dd>
+<dt id="controller.register_controller_factory"><code class="name flex">
+<span>def <span class="ident">register_controller_factory</span></span>(<span>controller_type, factory)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Call this function to register your controller factory. It must be a previously defined function.</p>
+<h2 id="inputs">Inputs</h2>
+<ul>
+<li>controller_type: string identifying the type of controller this factory creates. It must be the same string used
+to define the type in configuration files.</li>
+<li>factory: factory function pointer. The new function must expect a dictionary as input, and return a Controller
+object.</li>
+</ul></section>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="controller.Controller"><code class="flex name class">
+<span>class <span class="ident">Controller</span></span>
+<span>(</span><span><small>ancestors:</small> abc.ABC)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Base controller class. DO NOT INSTANCE.
+All controllers must inherit from this class.
+Its abstract methods must be implemented. The purpose of registering the corresponding
+robot to it is making it possible to request some lower level data and functionalities.</p></section>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="controller.Telecom_Controller" href="#controller.Telecom_Controller">Telecom_Controller</a></li>
+<li><a title="controller.Sequential_PID_Controller" href="#controller.Sequential_PID_Controller">Sequential_PID_Controller</a></li>
+<li><a title="naive_controller.Naive_Controller" href="naive_controller.html#naive_controller.Naive_Controller">Naive_Controller</a></li>
+<li><a title="pddl_executor.PDDL_Executor" href="pddl_executor.html#pddl_executor.PDDL_Executor">PDDL_Executor</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="controller.Controller.__init__"><code class="name flex">
+<span>def <span class="ident">__init__</span></span>(<span>self, controller_type=&#39;&#39;)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Controller type stored as a string mainly for logging purposes. Might also be used
+by specific implementations in order to indentify variations in behavior.</p></section>
+</dd>
+<dt id="controller.Controller.control"><code class="name flex">
+<span>def <span class="ident">control</span></span>(<span>self, ang, dst)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Driver function to centralize and standardize the controller. Can be modified by child classes,
+provided that the result value always is a tuple of the form (angular velocity, linear velocity)</p></section>
+</dd>
+<dt id="controller.Controller.goal_oriented"><code class="name flex">
+<span>def <span class="ident">goal_oriented</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Override and set to true if the controller being implemented operates over a set of goals.</p></section>
+</dd>
+<dt id="controller.Controller.handle_collision"><code class="name flex">
+<span>def <span class="ident">handle_collision</span></span>(<span>self, col)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Placeholder function used to represent any collision handled policies implemented by a given controller.
+Necessary in order to avoid weird crashes in the simulation.</p></section>
+</dd>
+<dt id="controller.Controller.has_cur_detected_edge_list"><code class="name flex">
+<span>def <span class="ident">has_cur_detected_edge_list</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Override and set to true if the controller being implemented holds a list of currently detected edges.</p></section>
+</dd>
+<dt id="controller.Controller.has_edge_list"><code class="name flex">
+<span>def <span class="ident">has_edge_list</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Override and set to true if the controller being implemented holds a list of detected edges.</p></section>
+</dd>
+<dt id="controller.Controller.on_collision"><code class="name flex">
+<span>def <span class="ident">on_collision</span></span>(<span>self, pos)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Callback for collision management. Doesn't need to be overriden unless special measures are to be
+taken when the robot actually collides.</p></section>
+</dd>
+<dt id="controller.Controller.register_robot"><code class="name flex">
+<span>def <span class="ident">register_robot</span></span>(<span>self, r)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Registers the robot with the controller. Can be used to issue specific instructions directly, or
+to read some odometry information from the physical hardware.</p></section>
+</dd>
+<dt id="controller.Controller.write_info_to_log"><code class="name flex">
+<span>def <span class="ident">write_info_to_log</span></span>(<span>self, log_file)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Writes info relevant to the controller at hand to the specified log file.
+Must be implemented by those controllers that might need to output relevant information.</p></section>
+</dd>
+</dl>
+</dd>
+<dt id="controller.Sequential_PID_Controller"><code class="flex name class">
+<span>class <span class="ident">Sequential_PID_Controller</span></span>
+<span>(</span><span><small>ancestors:</small> <a title="controller.Controller" href="#controller.Controller">Controller</a>, abc.ABC)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Base controller class. DO NOT INSTANCE.
+All controllers must inherit from this class.
+Its abstract methods must be implemented. The purpose of registering the corresponding
+robot to it is making it possible to request some lower level data and functionalities.</p></section>
+<h3>Methods</h3>
+<dl>
+<dt id="controller.Sequential_PID_Controller.__init__"><code class="name flex">
+<span>def <span class="ident">__init__</span></span>(<span>self, goal=[(0, 0)], ap=0, ai=0, ad=0, lp=0, li=0, ld=0)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Constructor for the Sequential_PID_Controller class.
+Initializes its goal list and proportionality constants.
+- goal: list of target spots that must be visited by the robot.
+- ap, ai, ad: proportionality constants for angular velocity.
+- lp, li, ld: proportionality constants for linear acceleration.</p></section>
+</dd>
+<dt id="controller.Sequential_PID_Controller.calculate_acceleration_variation"><code class="name flex">
+<span>def <span class="ident">calculate_acceleration_variation</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Applies PID control over the distance from the current spot to the current goal in order
+to determine how acceleration should vary. It also includes a policy to ease turning around.</p></section>
+</dd>
+<dt id="controller.Sequential_PID_Controller.calculate_angle_variation"><code class="name flex">
+<span>def <span class="ident">calculate_angle_variation</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Applies PID control over the difference between the desired angle and the current orientation
+of the robot in order to determine angular velocity.</p></section>
+</dd>
+<dt id="controller.Sequential_PID_Controller.calculate_target_angle"><code class="name flex">
+<span>def <span class="ident">calculate_target_angle</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Simply uses vector math to determine what angle the robot should be oriented in next.
+Python's math library handles most of the heavylifting.</p></section>
+</dd>
+<dt id="controller.Sequential_PID_Controller.choose_acceleration"><code class="name flex">
+<span>def <span class="ident">choose_acceleration</span></span>(<span>self, angles, distances)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>As it happens with the angular velocity, calculating the desired acceleration at any given point in time
+is harder with a PID controller.
+First, the controller calculates a variation in acceleration, then accounts for the robot's current acceleration.
+Finally, it ensures that the absolute value of the new acceleration won't exceed a certain threshold.</p></section>
+</dd>
+<dt id="controller.Sequential_PID_Controller.choose_angle"><code class="name flex">
+<span>def <span class="ident">choose_angle</span></span>(<span>self, angles, distances)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Given the needs of a PID controller, this function is a tad more complex than other implementations.
+First, it needs to update the robot's target angle, in order to correct deviation.
+Then, it needs to apply the actual PID controller in order to calculate the target angular velocity.</p></section>
+</dd>
+<dt id="controller.Sequential_PID_Controller.control"><code class="name flex">
+<span>def <span class="ident">control</span></span>(<span>self, ang, dst)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Driver function to centralize and standardize the controller.
+A tad more complex than in other examples, as it implements the
+controller's obstacle avoidance policy in the form of a very simple
+state machine that needs to be managed.</p></section>
+</dd>
+<dt id="controller.Sequential_PID_Controller.control_advance"><code class="name flex">
+<span>def <span class="ident">control_advance</span></span>(<span>self, ang, dst)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Controller for a regular functioning state. Just keep moving towards the
+next goal.</p></section>
+</dd>
+<dt id="controller.Sequential_PID_Controller.control_avoid"><code class="name flex">
+<span>def <span class="ident">control_avoid</span></span>(<span>self, ang, dst)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Controller for a state in which avoiding an obstacle has become a necessity.
+Tries to turn a bit
+and use that turning in order to avoid the obstacle in question.</p></section>
+</dd>
+<dt id="controller.Sequential_PID_Controller.goal_oriented"><code class="name flex">
+<span>def <span class="ident">goal_oriented</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Always returns true, as the controller does keep a list of goals to accomplish.</p></section>
+</dd>
+<dt id="controller.Sequential_PID_Controller.handle_collision"><code class="name flex">
+<span>def <span class="ident">handle_collision</span></span>(<span>self, col)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Just updates the list of edges currently being detected, and the list of all detected edges.</p></section>
+</dd>
+<dt id="controller.Sequential_PID_Controller.has_cur_detected_edge_list"><code class="name flex">
+<span>def <span class="ident">has_cur_detected_edge_list</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Always returns true, given that the controller keeps track of the currently detected edges.</p></section>
+</dd>
+<dt id="controller.Sequential_PID_Controller.has_edge_list"><code class="name flex">
+<span>def <span class="ident">has_edge_list</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Always returns true, given that the controller keeps track of an edge list.</p></section>
+</dd>
+<dt id="controller.Sequential_PID_Controller.is_at_goal"><code class="name flex">
+<span>def <span class="ident">is_at_goal</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Determines if the actual robot is touching the goal. If so, the goal is considered to have been reached.</p></section>
+</dd>
+<dt id="controller.Sequential_PID_Controller.is_done"><code class="name flex">
+<span>def <span class="ident">is_done</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Returns True only when all goals have been accomplished.</p></section>
+</dd>
+<dt id="controller.Sequential_PID_Controller.manage_state"><code class="name flex">
+<span>def <span class="ident">manage_state</span></span>(<span>self, dst)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Simply checks whether the robot can move forward normally or needs to avoid an obstacle,
+and update state accordingly.</p></section>
+</dd>
+<dt id="controller.Sequential_PID_Controller.switch_to_next_goal"><code class="name flex">
+<span>def <span class="ident">switch_to_next_goal</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Actually removes the currently achieved goal from the list of objectives to accomplish.</p></section>
+</dd>
+<dt id="controller.Sequential_PID_Controller.update_sensor_angles"><code class="name flex">
+<span>def <span class="ident">update_sensor_angles</span></span>(<span>self, angles, distances)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Updates the list representing the actual orientation of the sensors so that the simulator may
+provide a proper representation. It also adjusts distances if needed.</p></section>
+</dd>
+<dt id="controller.Sequential_PID_Controller.write_info_to_log"><code class="name flex">
+<span>def <span class="ident">write_info_to_log</span></span>(<span>self, log_file)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Dumps information about the controller on the selected log file. Said information encompasses:
+- List of goals left to reach.
+- Current state.
+- Current target angle.
+The main point of this information being debugging.</p></section>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="controller.Controller" href="#controller.Controller">Controller</a></b></code>:
+<ul class="hlist">
+<li><code><a title="controller.Controller.on_collision" href="#controller.Controller.on_collision">on_collision</a></code></li>
+<li><code><a title="controller.Controller.register_robot" href="#controller.Controller.register_robot">register_robot</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="controller.Telecom_Controller"><code class="flex name class">
+<span>class <span class="ident">Telecom_Controller</span></span>
+<span>(</span><span><small>ancestors:</small> <a title="controller.Controller" href="#controller.Controller">Controller</a>, abc.ABC)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Class representing a teleoperated controller. Simply detects input from keyboard and uses it to control
+the robot.</p></section>
+<h3>Methods</h3>
+<dl>
+<dt id="controller.Telecom_Controller.__init__"><code class="name flex">
+<span>def <span class="ident">__init__</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Good old controller. Doesn't need any input.</p></section>
+</dd>
+<dt id="controller.Telecom_Controller.choose_angle"><code class="name flex">
+<span>def <span class="ident">choose_angle</span></span>(<span>self, ang, dst)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Sets the angular velocity to 25 degrees per second in the direction of the pressed arrow.
+If there are no side arrows pressed, it returns 0.</p></section>
+</dd>
+<dt id="controller.Telecom_Controller.choose_speed"><code class="name flex">
+<span>def <span class="ident">choose_speed</span></span>(<span>self, ang, dst)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Alters the robot's acceleration based on the directional arrows pressed.
+If forward is pressed, it increases in 3 pixels per second squared.
+If backward is pressed, it decresses in 3 pixels per second squared.
+If none of them are pressed, the robot's acceleration is not modified.</p></section>
+</dd>
+<dt id="controller.Telecom_Controller.control"><code class="name flex">
+<span>def <span class="ident">control</span></span>(<span>self, ang, dst)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Driver function to centralize and standardize the controller.</p></section>
+</dd>
+<dt id="controller.Telecom_Controller.goal_oriented"><code class="name flex">
+<span>def <span class="ident">goal_oriented</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Always returns false, given that the controller doesn't have a list of goals to accomplish.</p></section>
+</dd>
+<dt id="controller.Telecom_Controller.handle_collision"><code class="name flex">
+<span>def <span class="ident">handle_collision</span></span>(<span>self, col)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Registers the currently detected edges so they can be represented by the simulator.</p></section>
+</dd>
+<dt id="controller.Telecom_Controller.has_cur_detected_edge_list"><code class="name flex">
+<span>def <span class="ident">has_cur_detected_edge_list</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Always returns true, given that the controller keeps track of the currently detected edges.</p></section>
+</dd>
+<dt id="controller.Telecom_Controller.has_edge_list"><code class="name flex">
+<span>def <span class="ident">has_edge_list</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Always returns true, given that the controller keeps track of an edge list.</p></section>
+</dd>
+<dt id="controller.Telecom_Controller.update_sensor_angles"><code class="name flex">
+<span>def <span class="ident">update_sensor_angles</span></span>(<span>self, angles, distances)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Updates the list representing the actual orientation of the sensors so that the simulator may
+provide a proper representation. It also adjusts distances if needed.</p></section>
+</dd>
+<dt id="controller.Telecom_Controller.write_info_to_log"><code class="name flex">
+<span>def <span class="ident">write_info_to_log</span></span>(<span>self, log_file)</span>
+</code></dt>
+<dd>
+<section class="desc"><p>Standard function. Given the kind of controller, it has nothing to do.</p></section>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="controller.Controller" href="#controller.Controller">Controller</a></b></code>:
+<ul class="hlist">
+<li><code><a title="controller.Controller.on_collision" href="#controller.Controller.on_collision">on_collision</a></code></li>
+<li><code><a title="controller.Controller.register_robot" href="#controller.Controller.register_robot">register_robot</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="controller.create_path_planning_controller" href="#controller.create_path_planning_controller">create_path_planning_controller</a></code></li>
+<li><code><a title="controller.create_seq_pid_controller" href="#controller.create_seq_pid_controller">create_seq_pid_controller</a></code></li>
+<li><code><a title="controller.create_telecom_controller" href="#controller.create_telecom_controller">create_telecom_controller</a></code></li>
+<li><code><a title="controller.register_controller_factory" href="#controller.register_controller_factory">register_controller_factory</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="controller.Controller" href="#controller.Controller">Controller</a></code></h4>
+<ul class="">
+<li><code><a title="controller.Controller.__init__" href="#controller.Controller.__init__">__init__</a></code></li>
+<li><code><a title="controller.Controller.control" href="#controller.Controller.control">control</a></code></li>
+<li><code><a title="controller.Controller.goal_oriented" href="#controller.Controller.goal_oriented">goal_oriented</a></code></li>
+<li><code><a title="controller.Controller.handle_collision" href="#controller.Controller.handle_collision">handle_collision</a></code></li>
+<li><code><a title="controller.Controller.has_cur_detected_edge_list" href="#controller.Controller.has_cur_detected_edge_list">has_cur_detected_edge_list</a></code></li>
+<li><code><a title="controller.Controller.has_edge_list" href="#controller.Controller.has_edge_list">has_edge_list</a></code></li>
+<li><code><a title="controller.Controller.on_collision" href="#controller.Controller.on_collision">on_collision</a></code></li>
+<li><code><a title="controller.Controller.register_robot" href="#controller.Controller.register_robot">register_robot</a></code></li>
+<li><code><a title="controller.Controller.write_info_to_log" href="#controller.Controller.write_info_to_log">write_info_to_log</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="controller.Sequential_PID_Controller" href="#controller.Sequential_PID_Controller">Sequential_PID_Controller</a></code></h4>
+<ul class="">
+<li><code><a title="controller.Sequential_PID_Controller.__init__" href="#controller.Sequential_PID_Controller.__init__">__init__</a></code></li>
+<li><code><a title="controller.Sequential_PID_Controller.calculate_acceleration_variation" href="#controller.Sequential_PID_Controller.calculate_acceleration_variation">calculate_acceleration_variation</a></code></li>
+<li><code><a title="controller.Sequential_PID_Controller.calculate_angle_variation" href="#controller.Sequential_PID_Controller.calculate_angle_variation">calculate_angle_variation</a></code></li>
+<li><code><a title="controller.Sequential_PID_Controller.calculate_target_angle" href="#controller.Sequential_PID_Controller.calculate_target_angle">calculate_target_angle</a></code></li>
+<li><code><a title="controller.Sequential_PID_Controller.choose_acceleration" href="#controller.Sequential_PID_Controller.choose_acceleration">choose_acceleration</a></code></li>
+<li><code><a title="controller.Sequential_PID_Controller.choose_angle" href="#controller.Sequential_PID_Controller.choose_angle">choose_angle</a></code></li>
+<li><code><a title="controller.Sequential_PID_Controller.control" href="#controller.Sequential_PID_Controller.control">control</a></code></li>
+<li><code><a title="controller.Sequential_PID_Controller.control_advance" href="#controller.Sequential_PID_Controller.control_advance">control_advance</a></code></li>
+<li><code><a title="controller.Sequential_PID_Controller.control_avoid" href="#controller.Sequential_PID_Controller.control_avoid">control_avoid</a></code></li>
+<li><code><a title="controller.Sequential_PID_Controller.goal_oriented" href="#controller.Sequential_PID_Controller.goal_oriented">goal_oriented</a></code></li>
+<li><code><a title="controller.Sequential_PID_Controller.handle_collision" href="#controller.Sequential_PID_Controller.handle_collision">handle_collision</a></code></li>
+<li><code><a title="controller.Sequential_PID_Controller.has_cur_detected_edge_list" href="#controller.Sequential_PID_Controller.has_cur_detected_edge_list">has_cur_detected_edge_list</a></code></li>
+<li><code><a title="controller.Sequential_PID_Controller.has_edge_list" href="#controller.Sequential_PID_Controller.has_edge_list">has_edge_list</a></code></li>
+<li><code><a title="controller.Sequential_PID_Controller.is_at_goal" href="#controller.Sequential_PID_Controller.is_at_goal">is_at_goal</a></code></li>
+<li><code><a title="controller.Sequential_PID_Controller.is_done" href="#controller.Sequential_PID_Controller.is_done">is_done</a></code></li>
+<li><code><a title="controller.Sequential_PID_Controller.manage_state" href="#controller.Sequential_PID_Controller.manage_state">manage_state</a></code></li>
+<li><code><a title="controller.Sequential_PID_Controller.switch_to_next_goal" href="#controller.Sequential_PID_Controller.switch_to_next_goal">switch_to_next_goal</a></code></li>
+<li><code><a title="controller.Sequential_PID_Controller.update_sensor_angles" href="#controller.Sequential_PID_Controller.update_sensor_angles">update_sensor_angles</a></code></li>
+<li><code><a title="controller.Sequential_PID_Controller.write_info_to_log" href="#controller.Sequential_PID_Controller.write_info_to_log">write_info_to_log</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="controller.Telecom_Controller" href="#controller.Telecom_Controller">Telecom_Controller</a></code></h4>
+<ul class="">
+<li><code><a title="controller.Telecom_Controller.__init__" href="#controller.Telecom_Controller.__init__">__init__</a></code></li>
+<li><code><a title="controller.Telecom_Controller.choose_angle" href="#controller.Telecom_Controller.choose_angle">choose_angle</a></code></li>
+<li><code><a title="controller.Telecom_Controller.choose_speed" href="#controller.Telecom_Controller.choose_speed">choose_speed</a></code></li>
+<li><code><a title="controller.Telecom_Controller.control" href="#controller.Telecom_Controller.control">control</a></code></li>
+<li><code><a title="controller.Telecom_Controller.goal_oriented" href="#controller.Telecom_Controller.goal_oriented">goal_oriented</a></code></li>
+<li><code><a title="controller.Telecom_Controller.handle_collision" href="#controller.Telecom_Controller.handle_collision">handle_collision</a></code></li>
+<li><code><a title="controller.Telecom_Controller.has_cur_detected_edge_list" href="#controller.Telecom_Controller.has_cur_detected_edge_list">has_cur_detected_edge_list</a></code></li>
+<li><code><a title="controller.Telecom_Controller.has_edge_list" href="#controller.Telecom_Controller.has_edge_list">has_edge_list</a></code></li>
+<li><code><a title="controller.Telecom_Controller.update_sensor_angles" href="#controller.Telecom_Controller.update_sensor_angles">update_sensor_angles</a></code></li>
+<li><code><a title="controller.Telecom_Controller.write_info_to_log" href="#controller.Telecom_Controller.write_info_to_log">write_info_to_log</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.5.3</a>.</p>
+</footer>
+</body>
+</html>

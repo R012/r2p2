@@ -1,0 +1,6 @@
+{
+	"stage": "../res/test.png",
+	"robot": "../conf/robot.json",
+	"controller": "../conf/controller-default.json",
+	"gui": true
+}
