@@ -182,7 +182,7 @@ class PDDL_Executor(c.Controller):
             if type(task) is tuple:
                 self.log.write(task[0].lower()+"\n")
                 self.actions[task[0]](self, task[1])
-            elif task in self.actions:
+            elif task.lower() in self.actions:
                 self.log.write(task.lower()+"\n")
                 self.actions[task.lower()](self)
             else:
