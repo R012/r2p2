@@ -10,7 +10,7 @@ import controller as c
 import utils as u
 
 class Neuro_controller(c.Controller):
-    def __init__(self, weights, tme, evolve):
+    def __init__(self, weights, hidden_layer, activation, tme, evolve):
         super(Neuro_controller, self).__init__("NEURO")
         self.n_sonar = 0
         self.ann = 0
@@ -20,6 +20,8 @@ class Neuro_controller(c.Controller):
         self.origin = (-1, -1)
         self.distance = 0
         self.weights = weights
+        self.hidden_layer = hidden_layer
+        self.activation = activation
         self.time = tme
         self.epoch_time = self.time
         self.evolve = evolve
@@ -106,12 +108,12 @@ class Neuro_controller(c.Controller):
         else:
             self.n_sonar = self.robot.sensors
         self.input_layer_size = self.n_sonar
-        hidden_layer_size = (1) # TODO: Put each hidden layer size here. Layers are fully connected
+        hidden_layer_size = tuple(self.hidden_layer) # Layers are fully connected
                                 # (1) defines one hidden layer with one neuron
         init_data = np.asarray([0 for _ in range(self.input_layer_size)])
         init_data = init_data.reshape(1, self.input_layer_size)
         self.ann = MLPClassifier(hidden_layer_sizes = hidden_layer_size,
-                                 activation='tanh', # You can try another activation function
+                                 activation=self.activation, # You can try another activation function
                                  solver='adam', # This is not used at all
                                  warm_start = True,
                                  max_iter = 1)
@@ -165,6 +167,6 @@ class Neuro_controller(c.Controller):
             self.__load_new_params()
 
 def create_neuro_controller(f):
-    return Neuro_controller(f['weights'], f['time'], f['evolve'])
+    return Neuro_controller(f['weights'], f['hidden_layer'], f['activation'], f['time'], f['evolve'])
 
 c.register_controller_factory("NEURO", create_neuro_controller)

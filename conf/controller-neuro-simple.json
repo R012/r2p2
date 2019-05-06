@@ -1,6 +1,8 @@
 {
 	"controller_type": "NEURO",
 	"weights": [0,0,0,0,0,0,0],
+	"hidden_layer": [1],
+	"activation": "tanh",
 	"time": 20,
 	"evolve": false
 }
