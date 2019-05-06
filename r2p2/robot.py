@@ -46,7 +46,7 @@ class Robot:
         kept separate for the sake of code clarity.
     """
     def __init__(self, identifier = -1, x = 0, y = 0, orientation = 0, speed = 0, max_speed = 2, acceleration = 0,\
-                 sensors = 8, vision_range=(0, 10000), radius = 1, controller = Controller()):
+                 sensors = 8, vision_range=(0, 10000), radius = 1, controller = Controller(), name = None):
         """
             Constructor function for the Robot class. Not only does it asign the corresponding values to all parameters,
             it also performs secondary initialization operations, such as registering the robot to its controller.
@@ -67,9 +67,16 @@ class Robot:
         self.radius = radius
         self.controller = controller
         self.color = (0, 0, 0.85, 1.0)
-        self.log = open("../logs/robot_"+str(self.identifier)+".log", "w+")
-        self.sensors_output = open("../logs/robot_"+str(self.identifier)+"_sensors.log", "w+")
-        self.benchmark_log = open("../logs/robot_"+str(self.identifier)+"_benchmark.log", "w+")
+        self.name = name
+        if self.name is not None:
+            self.log = open("../logs/"+str(self.name)+".log", "w+")
+            self.sensors_output = open("../logs/"+str(self.name)+"_sensors.log", "w+")
+            self.benchmark_log = open("../logs/"+str(self.name)+"_benchmark.log", "w+")
+
+        else:
+            self.log = open("../logs/robot_"+str(self.identifier)+".log", "w+")
+            self.sensors_output = open("../logs/robot_"+str(self.identifier)+"_sensors.log", "w+")
+            self.benchmark_log = open("../logs/robot_"+str(self.identifier)+"_benchmark.log", "w+")
         self.last_op_started = 0
         self.controller.register_robot(self)
         self.last_pos = (x, y)

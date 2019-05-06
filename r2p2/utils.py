@@ -135,11 +135,19 @@ def create_robot(json_file = '../conf/robot.json', controller = Telecom_Controll
     """
     with open(json_file, 'r') as fp:
         f = json.load(fp)
-        r = Robot(identifier = f['id'], x = f['x'], y = f['y'],\
-                  orientation = f['orientation'],\
-                  vision_range = (f['sonar_range'][0], f['sonar_range'][1]),\
-                  sensors = f['sonars'],\
-                  radius = f['radius'], max_speed = f['max_speed'], controller=controller)
+        if 'name' in f:
+            r = Robot(identifier = f['id'], x = f['x'], y = f['y'],\
+                      orientation = f['orientation'],\
+                      vision_range = (f['sonar_range'][0], f['sonar_range'][1]),\
+                      sensors = f['sonars'],\
+                      radius = f['radius'], max_speed = f['max_speed'], controller=controller,
+                      name=f['name'])
+        else:
+            r = Robot(identifier = f['id'], x = f['x'], y = f['y'],\
+                      orientation = f['orientation'],\
+                      vision_range = (f['sonar_range'][0], f['sonar_range'][1]),\
+                      sensors = f['sonars'],\
+                      radius = f['radius'], max_speed = f['max_speed'], controller=controller)
         if 'battery' in f:
             r.insert_battery_details(f['step'], f['battery'], f['charging_rate'],
                                      f['movement_cost'], f['reading_cost'],
@@ -159,13 +167,31 @@ def load_simulation(json_file='../conf/config.json'):
     with open(json_file, 'r') as fp:
         f = json.load(fp)
         npdata = load_image(f['stage'])
-        c = create_controller(f['controller'])
+        if type(f['controller']) is list:
+            c = []
+            for path in f['controller']:
+                c.append(create_controller(path))
+        else:
+            c = create_controller(f['controller'])
         gui = f['gui']
         if 'co2_center' in f:
             co2_center = f['co2_center']
         if 'co2_radius' in f:
             generate_dist(f['co2_radius'])
-        display_image(create_robot(f['robot'], c))
+        if type(f['robot']) is list:
+            r = []
+            i = 0
+            for path in f['robot']:
+                if type(c) is list:
+                    r.append(create_robot(path, c[i]))
+                    i += 1
+                    if i >= len(c):
+                        i = 0
+                else:
+                    r.append(create_robot(path, c))
+        else:
+            r = create_robot(f['robot'], c)
+        display_image(r)
 
 def update_loop(robots, npdata):
     global delta, start_time, frames
@@ -252,28 +278,33 @@ def display_image(r):
     fig = plt.figure()
     plt.gray()
     robots = []
-    robots.append(r)
-    if r.controller.goal_oriented():
-        r.x = r.controller.goal[0][0]
-        r.y = r.controller.goal[0][1]
+    if type(r) is list:
+        robots = r
+    else:
+        robots.append(r)
+    for robot in robots:
+        if robot.controller.goal_oriented():
+            robot.x = robot.controller.goal[0][0]
+            robot.y = robot.controller.goal[0][1]
     npdata = np.rot90(npdata)
     npdata = np.flipud(npdata)
     if gui:
         fig.canvas.mpl_connect('key_press_event', press)
-        fig.canvas.set_window_title(r.controller.type+"_"+str(r.identifier))
+        fig.canvas.set_window_title(robots[-1].controller.type+"_"+str(robots[-1].identifier))
         ax = fig.gca()
-        if r.controller.goal_oriented():
-            img_d = ImageDraw.Draw(img)
-            aux = [(r.x, r.y)]
-            for i in range(0, len(r.controller.goal)):
-                aux.append(tuple(r.controller.goal[i]))
-            img_d.line(aux, fill=(155, 0, 100), width=3)
-            aux_1 = []
-            for a in aux:
-                aux_1.append([(a[0]-3, a[1]-3), (a[0]+3, a[1]+3)])
-            for a in aux_1:
-                img_d.ellipse(a, fill=(255, 0, 0))
-            del img_d
+        for robot in robots:
+            if robot.controller.goal_oriented():
+                img_d = ImageDraw.Draw(img)
+                aux = [(robot.x, robot.y)]
+                for i in range(0, len(robot.controller.goal)):
+                    aux.append(tuple(robot.controller.goal[i]))
+                img_d.line(aux, fill=(155, 0, 100), width=3)
+                aux_1 = []
+                for a in aux:
+                    aux_1.append([(a[0]-3, a[1]-3), (a[0]+3, a[1]+3)])
+                for a in aux_1:
+                    img_d.ellipse(a, fill=(255, 0, 0))
+                del img_d
         plt.imshow(img, interpolation='none')
         ani = animation.FuncAnimation(fig, animate, fargs=(fig, img, robots, npdata, ax, ), interval=0)
         if xlabels:
