@@ -36,6 +36,8 @@ import controller as c
 import utils as u
 import math
 
+labeled = {}
+
 class PDDL_Executor(c.Controller):
     """
         Class defining what a PDDL_Executor is.
@@ -247,11 +249,18 @@ class PDDL_Executor(c.Controller):
         self.actions['generic'] = PDDL_Executor.generic_action
 
     def __place_tag(self, tag):
+        global labeled
+        pos = (self.robot.x, self.robot.y)
+        if pos not in labeled:
+            labeled[pos] = []
+        offset = len(labeled[pos])
+        labeled[pos].append(tag)
         if u.ax:
             u.ax.add_patch(u.plt.Circle((self.robot.x,
                                          self.robot.y), radius=self.robot.radius/2))
             u.ax.text(self.robot.x + self.robot.radius/2,
-                      self.robot.y-self.robot.radius/2, tag)
+                      self.robot.y-self.robot.radius/2 + 10 * offset,
+                      tag)
 
 def create_pddl_executor(f):
     """
