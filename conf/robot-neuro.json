@@ -1,0 +1,17 @@
+{
+	"id": 0,
+	"x": 230,
+	"y": 250,
+	"orientation": 0,
+	"sonar_range": [0.5, 25],
+	"radius": 5,
+	"sonars": [0, 45, 70, 290, 315],
+	"max_speed": 50,
+	"step": 10,
+	"battery": 100,
+	"charging_rate": 5,
+	"movement_cost": 0,
+	"reading_cost": 10,
+	"picture_cost": 5,
+	"generic_cost": 0
+}

@@ -495,4 +495,4 @@ register_controller_factory("PATH_PLANNING", create_path_planning_controller)
 
 import naive_controller
 import pddl_executor
-#import neurocontroller
+import neurocontroller
