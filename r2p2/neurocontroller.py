@@ -137,14 +137,24 @@ class Neuro_controller(c.Controller):
 
     def set_network_params(self, weights):
         shapes = self.__calculate_shape(self.ann.coefs_)
-        cutoff = shapes[0][0] * shapes[0][1]
+        print(shapes)
+        cutoff = []
+        for i in range(len(shapes)):
+            if cutoff:
+                cutoff.append(shapes[i][0] * shapes[i][1] + cutoff[-1])
+            else:
+                cutoff.append(shapes[i][0] * shapes[i][1])
         print("Cutoff: {}".format(cutoff))
-        b0 = np.asarray([0 for _ in range(shapes[0][1])])
-        b1 = np.asarray([0 for _ in range(shapes[1][1])])
-        w1 = np.asarray(weights[:cutoff]).reshape(shapes[0])
-        w2 = np.asarray(weights[cutoff:]).reshape(shapes[1])
-        w = [w1, w2]
-        b = [b0, b1]
+
+        w = []
+        b = []
+        for i in range(len(shapes)):
+            b.append(np.asarray([0 for _ in range(shapes[i][1])]))
+            if i > 0: # General case
+                w.append(np.asarray(weights[cutoff[i-1]:cutoff[i]]).reshape(shapes[i]))
+            else: # First position
+                w.append(np.asarray(weights[:cutoff[i]]).reshape(shapes[i]))
+            
         self.ann.coefs_ = w
         self.ann.intercepts_ = b
 
