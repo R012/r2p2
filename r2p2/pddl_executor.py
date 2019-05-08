@@ -257,12 +257,12 @@ class PDDL_Executor(c.Controller):
         if tag not in labeled[pos]:
             labeled[pos].append(tag)
         elif offset > 0:
-            offset -= 1
+            offset = labeled[pos].index(tag)
         if u.ax:
             u.ax.add_patch(u.plt.Circle((self.robot.x,
                                          self.robot.y), radius=self.robot.radius/2))
             u.ax.text(self.robot.x + self.robot.radius/2,
-                      self.robot.y-self.robot.radius/2 + 10 * offset,
+                      self.robot.y-self.robot.radius/2 + 15 * offset,
                       tag)
 
 def create_pddl_executor(f):
