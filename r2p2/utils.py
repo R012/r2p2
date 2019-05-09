@@ -152,6 +152,8 @@ def create_robot(json_file = '../conf/robot.json', controller = Telecom_Controll
             r.insert_battery_details(f['step'], f['battery'], f['charging_rate'],
                                      f['movement_cost'], f['reading_cost'],
                                      f['picture_cost'], f['generic_cost'])
+        if 'color' in f:
+            r.set_color(f['color'])
         return r
 
 def load_simulation(json_file='../conf/config.json'):

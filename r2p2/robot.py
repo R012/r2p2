@@ -46,7 +46,7 @@ class Robot:
         kept separate for the sake of code clarity.
     """
     def __init__(self, identifier = -1, x = 0, y = 0, orientation = 0, speed = 0, max_speed = 2, acceleration = 0,\
-                 sensors = 8, vision_range=(0, 10000), radius = 1, controller = Controller(), name = None):
+                 sensors = 8, vision_range=(0, 10000), radius = 1, color=(0, 0, 0.85, 1.0), controller = Controller(), name = None):
         """
             Constructor function for the Robot class. Not only does it asign the corresponding values to all parameters,
             it also performs secondary initialization operations, such as registering the robot to its controller.
@@ -66,7 +66,9 @@ class Robot:
         self.vision_range = vision_range
         self.radius = radius
         self.controller = controller
-        self.color = (0, 0, 0.85, 1.0)
+        if type(color) is list:
+            color = tuple(color)
+        self.color = color
         self.name = name
         if self.name is not None:
             self.log = open("../logs/"+str(self.name)+".log", "w+")
@@ -81,6 +83,11 @@ class Robot:
         self.controller.register_robot(self)
         self.last_pos = (x, y)
         self.has_noise = True
+
+    def set_color(self, color):
+        if type(color) is list:
+            color = tuple(color)
+        self.color = color
 
     def insert_battery_details(self, step, battery, charging_rate,
                                movement_cost, reading_cost, picture_cost,
