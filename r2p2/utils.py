@@ -43,7 +43,8 @@ import matplotlib as mpl
 import time
 import math
 import json
-from robot import Robot    
+from robot import Robot
+from threading import Thread
 from controller import Sequential_PID_Controller, Telecom_Controller
 import controller
 
@@ -67,6 +68,8 @@ gui = True
 show_robot = True
 button = None
 showFPS = True
+run = True
+
 
 def switch_show_robot(dummy):
     """
@@ -196,26 +199,27 @@ def load_simulation(json_file='../conf/config.json'):
         display_image(r)
 
 def update_loop(robots, npdata):
-    global delta, start_time, frames
-    while True:
-        delta = 0.1
+    global delta, pressed, run
+    while run:
+        init_time = time.time()
+        if gui:
+            delta = calculate_delta()
+        else:
+            delta = 0.1
         for r in robots:
+            r.get_lock().acquire()
             r.update(npdata, delta)
-            end_time = time.time()
-            frames += 1
-            if (end_time - start_time) >= 1:
-                if showFPS:
-                    print("FPS: ", (frames/(end_time - start_time)))
-                start_time = time.time()
-                frames = 0
+            r.write_stats_to_log()
+            r.get_lock().release()
+        pressed.clear()
+        time.sleep(1/80)
 
 def animate(i, fig, img, robots, npdata, ax):
     """
         Update function. Updates internal world data, then prints it to a plot.
         Must be registered to said plot.
     """
-    global start_time, frames, pressed, artists, delta, show_robot
-    delta = calculate_delta()
+    global start_time, frames, artists, delta, show_robot
     for a in artists:
         a.remove()
         del a
@@ -223,9 +227,7 @@ def animate(i, fig, img, robots, npdata, ax):
 
     if show_robot:
         for r in robots:
-            r.update(npdata, delta)
-            r.write_stats_to_log()
-      
+            r.get_lock().acquire()
             if r.controller.has_cur_detected_edge_list():
                 for a in r.controller.actual_sensor_angles:
                     rectangle = plt.Rectangle((r.x, r.y), 0.0125, r.controller.cur_detected_edges_distances[r.controller.actual_sensor_angles.index(a)],\
@@ -247,6 +249,7 @@ def animate(i, fig, img, robots, npdata, ax):
             ax.draw_artist(rectangle)
             artists.append(circle)
             artists.append(rectangle)
+            r.get_lock().release()
     end_time = time.time()
     frames += 1
     if (end_time - start_time) >= 1:
@@ -255,7 +258,6 @@ def animate(i, fig, img, robots, npdata, ax):
         start_time = time.time()
         frames = 0
             
-    pressed.clear()
     fig.canvas.draw()
     fig.canvas.flush_events()
 
@@ -268,6 +270,10 @@ def load_image(infilename):
     data = np.asarray(img, dtype="int32")
     return data
 
+def handle_close(evt):
+    global run
+    run = False
+
 def display_image(r):
     """
         Driver function that starts the simulation, after being provided an image to use as stage.
@@ -278,6 +284,7 @@ def display_image(r):
     img = Image.fromarray(np.asarray(np.clip(npdata,0,255), dtype="uint8"), "L")
     img = img.convert("RGB")
     fig = plt.figure()
+    fig.canvas.mpl_connect('close_event', handle_close)
     plt.gray()
     robots = []
     if type(r) is list:
@@ -318,7 +325,10 @@ def display_image(r):
         if not show_robot:
             button = Button(plt.axes([0.7, 0.025, 0.25, 0.05]), 'Toggle play')
             button.on_clicked(switch_show_robot)
+        t = Thread(target=update_loop, args=(robots, npdata))
+        t.start()
         plt.show()
+        t.join()
     else:
         update_loop(robots, npdata)
 
