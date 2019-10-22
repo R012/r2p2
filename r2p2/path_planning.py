@@ -40,6 +40,8 @@ from node import Node
 search_methods = {}
 heuristic = {}
 
+expanded_nodes = 0
+
 def register_search_method(label, function):
     """
         Registers a new search method to be selected and used on runtime
@@ -168,7 +170,7 @@ def generate_waypoints_list(algo, start, finish, grid, heur="naive"):
         Outputs:
             - ordered list of waypoints conforming the planned path.
     """
-    global search_methods
+    global search_methods, expanded_nodes
     nodes = search_methods[algo](grid[start[0]][start[1]], grid[finish[0]][finish[1]], grid, heur)
     waypoints = []
     cost = 0
@@ -178,6 +180,7 @@ def generate_waypoints_list(algo, start, finish, grid, heur="naive"):
     print("Planned path: ",waypoints)
     print("Path length: ", len(waypoints))
     print("Total path cost: ", cost)
+    print("Total nodes expanded: ", expanded_nodes)
     return waypoints
 
 def generate_waypoints_list_mesh(algo, start, finish, mesh, heur="naive"):
@@ -193,7 +196,7 @@ def generate_waypoints_list_mesh(algo, start, finish, mesh, heur="naive"):
         Outputs:
             - ordered list of waypoints conforming the planned path.
     """
-    global search_methods
+    global search_methods, expanded_nodes
     nodes = search_methods[algo](mesh[tuple(start)], mesh[tuple(finish)], mesh, heur)
     waypoints = []
     cost = 0
@@ -203,6 +206,7 @@ def generate_waypoints_list_mesh(algo, start, finish, mesh, heur="naive"):
     print("Planned path: ",waypoints)
     print("Path length: ", len(waypoints))
     print("Total path cost: ", cost)
+    print("Total nodes expanded: ", expanded_nodes)
     return waypoints
 
 def run_path_planning(grid_size, algo='A*', start=(1, 1), finish=(2,2), heur='naive'):

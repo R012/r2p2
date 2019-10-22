@@ -27,7 +27,7 @@ __email__ =  "mario.cobos@edu.uah.es"
 __license__ = "GPLv3"
 __maintainer__ = "Mario Cobos Maestre"
 __status__ = "Development"
-__version__ = "0.0.1"
+__version__ = "0.0.5"
 
 import utils as u
     

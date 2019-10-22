@@ -33,6 +33,7 @@ __version__ = "0.0.2"
 
 from PIL import Image, ImageDraw, ImageColor
 import numpy as np
+import pygame
 from scipy import ndimage as filters
 from scipy.misc import imshow
 from scipy.stats import norm
@@ -43,7 +44,9 @@ import matplotlib as mpl
 import time
 import math
 import json
-from robot import Robot    
+import copy
+from robot import Robot
+from threading import Thread
 from controller import Sequential_PID_Controller, Telecom_Controller
 import controller
 
@@ -67,6 +70,10 @@ gui = True
 show_robot = True
 button = None
 showFPS = True
+run = True
+screen = None
+clock = None
+
 
 def switch_show_robot(dummy):
     """
@@ -89,10 +96,13 @@ def calculate_delta():
     Helper function that calculates the delta value for any given update call.
     Necessary in order for the update to be performed somewhat smoothly.
     """
-    global last_call
+    '''global last_call
     new_call = time.time()
     delta = new_call - last_call
     last_call = new_call
+    return delta'''
+    global clock, delta
+    delta = clock.tick(30)
     return delta
 
 def generate_dist(size = 1):
@@ -190,74 +200,73 @@ def load_simulation(json_file='../conf/config.json'):
                     if i >= len(c):
                         i = 0
                 else:
-                    r.append(create_robot(path, c))
+                    r.append(create_robot(path, copy.deepcopy(c)))
         else:
             r = create_robot(f['robot'], c)
         display_image(r)
 
 def update_loop(robots, npdata):
-    global delta, start_time, frames
-    while True:
-        delta = 0.1
+    global delta, pressed, run
+    while run:
+        init_time = time.time()
+        if gui:
+            delta = calculate_delta()
+        else:
+            delta = 0.1
         for r in robots:
+            r.get_lock().acquire()
             r.update(npdata, delta)
-            end_time = time.time()
-            frames += 1
-            if (end_time - start_time) >= 1:
-                if showFPS:
-                    print("FPS: ", (frames/(end_time - start_time)))
-                start_time = time.time()
-                frames = 0
+            r.write_stats_to_log()
+            r.write_stats()
+            r.get_lock().release()
+        pressed.clear()
+        time.sleep(1/80)
 
-def animate(i, fig, img, robots, npdata, ax):
+def update(robots, npdata):
+    delta = calculate_delta()/1000
+    for r in robots:
+            r.get_lock().acquire()
+            r.update(npdata, delta)
+            #r.print_stats()
+            r.write_stats_to_log()
+            r.get_lock().release()
+
+def animate(robots):
     """
         Update function. Updates internal world data, then prints it to a plot.
         Must be registered to said plot.
     """
-    global start_time, frames, pressed, artists, delta, show_robot
-    delta = calculate_delta()
-    for a in artists:
-        a.remove()
-        del a
-    artists.clear()
-
+    global start_time, frames, delta, show_robot, screen, clock
     if show_robot:
         for r in robots:
-            r.update(npdata, delta)
-            r.write_stats_to_log()
-      
+            r.get_lock().acquire()
             if r.controller.has_cur_detected_edge_list():
+                '''for e in r.controller.detected_edges:
+                    pygame.draw.circle(screen, r.color, (int(e[0]), int(e[1])), 1)'''
                 for a in r.controller.actual_sensor_angles:
-                    rectangle = plt.Rectangle((r.x, r.y), 0.0125, r.controller.cur_detected_edges_distances[r.controller.actual_sensor_angles.index(a)],\
-                                                  angle=a-90, color='magenta')
-                    ax.add_artist(rectangle)
-                    ax.draw_artist(rectangle)
-                    artists.append(rectangle)
+                    dstX = r.x + np.cos(np.radians(a)) * r.controller.cur_detected_edges_distances[r.controller.actual_sensor_angles.index(a)]
+                    dstY = r.y + np.sin(np.radians(a)) * r.controller.cur_detected_edges_distances[r.controller.actual_sensor_angles.index(a)]
+                    pygame.draw.line(screen, (255, 0, 255), (int(r.x), int(r.y)), (int(dstX), int(dstY)), 1)
                 for e in r.controller.cur_detected_edges:
-                    circle = plt.Circle((e[0], e[1]), (100/np.linalg.norm((e[0]-r.x, e[1]-r.y)))/90, color='g', clip_on=False)
-                    ax.add_artist(circle)
-                    ax.draw_artist(circle)
-                    artists.append(circle)
-
-            circle = plt.Circle((r.x, r.y), r.radius, color=r.color, clip_on=False)
-            rectangle = plt.Rectangle((r.x, r.y), 0.025, 2*r.radius, angle=r.orientation-90, color=r.color)
-            ax.add_artist(circle)
-            ax.draw_artist(circle)
-            ax.add_artist(rectangle)
-            ax.draw_artist(rectangle)
-            artists.append(circle)
-            artists.append(rectangle)
+                    pygame.draw.circle(screen, (0, 255, 0), (int(e[0]), int(e[1])), int((100/np.linalg.norm((e[0]-r.x, e[1]-r.y)))/90))
+                if type(r.color) is str:
+                    r.color = list(mpl.colors.to_rgb(mpl.colors.get_named_colors_mapping()[r.color]))
+                    r.color[0] *= 255
+                    r.color[1] *= 255
+                    r.color[2] *= 255
+                    r.color = tuple(r.color)
+            pygame.draw.circle(screen, r.color, (int(r.x), int(r.y)), int(r.radius))
+            dstX = r.x + np.cos(np.radians(r.orientation)) * 2 * r.radius
+            dstY = r.y + np.sin(np.radians(r.orientation)) * 2 * r.radius
+            pygame.draw.line(screen, r.color, (int(r.x), int(r.y)), (int(dstX), int(dstY)), 1)
+            r.get_lock().release()
     end_time = time.time()
     frames += 1
     if (end_time - start_time) >= 1:
         if showFPS:
-            print("FPS: ", (frames/(end_time - start_time)))
+            print("FPS: ", clock.get_fps())
         start_time = time.time()
         frames = 0
-            
-    pressed.clear()
-    fig.canvas.draw()
-    fig.canvas.flush_events()
 
 def load_image(infilename):
     """
@@ -268,17 +277,22 @@ def load_image(infilename):
     data = np.asarray(img, dtype="int32")
     return data
 
+def handle_close(evt):
+    global run
+    run = False
+
 def display_image(r):
     """
         Driver function that starts the simulation, after being provided an image to use as stage.
     """
-    global fig, npdata, xlabels, xticks, ylabels, yticks, show_robot, ax
+    global screen, npdata, show_robot, clock
     if show_robot:
         mpl.rcParams['toolbar'] = 'None'
     img = Image.fromarray(np.asarray(np.clip(npdata,0,255), dtype="uint8"), "L")
     img = img.convert("RGB")
-    fig = plt.figure()
-    plt.gray()
+    '''fig = plt.figure()
+    fig.canvas.mpl_connect('close_event', handle_close)
+    plt.gray()'''
     robots = []
     if type(r) is list:
         robots = r
@@ -291,7 +305,38 @@ def display_image(r):
     npdata = np.rot90(npdata)
     npdata = np.flipud(npdata)
     if gui:
-        fig.canvas.mpl_connect('key_press_event', press)
+        pygame.init()
+        pygame.display.set_caption("R2P2")
+        clock = pygame.time.Clock()
+        size = img.size
+        img = pygame.image.fromstring(img.tobytes("raw", 'RGB'), size, 'RGB')
+        screen = pygame.display.set_mode(size)
+        while True:
+            #pressed.clear()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    return
+                if event.type == pygame.KEYDOWN:
+                    press(event)
+                if event.type == pygame.KEYUP:
+                    pressed.remove(event.key)
+            
+            update(robots, npdata)
+            screen.fill((0, 0, 0))
+            screen.blit(img, (0, 0))
+            for robot in robots:
+                if robot.controller.goal_oriented():
+                    aux = [(robot.x, robot.y)]
+                    for i in range(0, len(robot.controller.goal)):
+                        aux.append(tuple(robot.controller.goal[i]))
+                    for i in range(0, len(aux) - 1):
+                        pygame.draw.line(screen,(155, 0, 100), aux[i], aux[i+1], 2)
+                    for e in aux:
+                        pygame.draw.circle(screen, (255, 0, 0), (int(e[0]), int(e[1])), 3)
+            animate(robots)
+            pygame.display.flip()
+        '''fig.canvas.mpl_connect('key_press_event', press)
         fig.canvas.set_window_title(robots[-1].controller.type+"_"+str(robots[-1].identifier))
         ax = fig.gca()
         for robot in robots:
@@ -318,7 +363,10 @@ def display_image(r):
         if not show_robot:
             button = Button(plt.axes([0.7, 0.025, 0.25, 0.05]), 'Toggle play')
             button.on_clicked(switch_show_robot)
+        t = Thread(target=update_loop, args=(robots, npdata))
+        t.start()
         plt.show()
+        t.join()'''
     else:
         update_loop(robots, npdata)
 

@@ -38,6 +38,7 @@ from abc import ABC
 import math
 import numpy as np
 import utils as u
+import pygame
 
 import path_planning as pp
 
@@ -162,9 +163,9 @@ class Telecom_Controller(Controller):
             Sets the angular velocity to 25 degrees per second in the direction of the pressed arrow.
             If there are no side arrows pressed, it returns 0.
         """
-        if 'left' in u.pressed:
+        if pygame.K_LEFT in u.pressed:
             return -25
-        elif 'right' in u.pressed:
+        elif pygame.K_RIGHT in u.pressed:
             return 25
         return 0
     
@@ -175,9 +176,9 @@ class Telecom_Controller(Controller):
             If backward is pressed, it decresses in 3 pixels per second squared.
             If none of them are pressed, the robot's acceleration is not modified.
         """
-        if 'up' in u.pressed:
+        if pygame.K_UP in u.pressed:
             return self.robot.speed + 3
-        elif 'down' in u.pressed:
+        elif pygame.K_DOWN in u.pressed:
             return self.robot.speed - 3
         return 0
 
@@ -479,7 +480,7 @@ def create_path_planning_controller(f):
     """
     if f['start'] == f['goal']:
         raise ValueError('Start and goal are the same spot.')
-    u.switch_show_robot(1)
+    #u.switch_show_robot(1)
     if 'mesh' in f['algorithm']:
         return Sequential_PID_Controller(goal=pp.run_path_planning_mesh(f['waypoints'], f['algorithm'], f['start'], f['goal'], f['heuristic']), ap=f['ap'],\
                                           ai=f['ai'], ad=f['ad'],\

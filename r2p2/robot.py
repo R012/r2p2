@@ -34,9 +34,11 @@ __version__ = "0.0.2"
 import random
 import math
 import numpy as np
+import matplotlib.colors as colors
 from controller import Controller
 import utils as u
 import time
+from threading import Lock
 
 class Robot:
     """
@@ -46,7 +48,10 @@ class Robot:
         kept separate for the sake of code clarity.
     """
     def __init__(self, identifier = -1, x = 0, y = 0, orientation = 0, speed = 0, max_speed = 2, acceleration = 0,\
-                 sensors = 8, vision_range=(0, 10000), radius = 1, color=(0, 0, 0.85, 1.0), controller = Controller(), name = None):
+                 sensors = 8, vision_range=(0, 10000), radius = 1,
+                 color=(int(random.random()*255), int(random.random()*255), int(random.random()*255)),
+                 controller = Controller(), name = None,
+                 lock = Lock()):
         """
             Constructor function for the Robot class. Not only does it asign the corresponding values to all parameters,
             it also performs secondary initialization operations, such as registering the robot to its controller.
@@ -66,9 +71,14 @@ class Robot:
         self.vision_range = vision_range
         self.radius = radius
         self.controller = controller
-        if type(color) is list:
+        '''if type(color) is list:
             color = tuple(color)
-        self.color = color
+        elif isinstance(color, str):
+            print("Converting color string to color")
+            color = tuple(colors.get_named_colors_mapping()[color])
+            color = (int(255 * color[0]), int(255 * color[1]), int(255 * color[2]))
+        self.color = color'''
+        self.color=(int(random.random()*255), int(random.random()*255), int(random.random()*255))
         self.name = name
         if self.name is not None:
             self.log = open("../logs/"+str(self.name)+".log", "w+")
@@ -83,11 +93,23 @@ class Robot:
         self.controller.register_robot(self)
         self.last_pos = (x, y)
         self.has_noise = True
+        self.lock = lock
 
     def set_color(self, color):
         if type(color) is list:
             color = tuple(color)
+        elif isinstance(color, str):
+            print("Converting color string to color")
+            aux = colors.get_named_colors_mapping()[color]
+            aux = aux.replace('#', '')
+            aux = list(map(''.join, zip(*[iter(aux)]*2)))
+            aux = [int(aux[i], 16) for i in range(len(aux))]
+            color = tuple(aux)
+            color = (int(color[0]), int(color[1]), int(color[2]))
         self.color = color
+
+    def get_lock(self):
+        return self.lock
 
     def insert_battery_details(self, step, battery, charging_rate,
                                movement_cost, reading_cost, picture_cost,
