@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - Changed the graphical frontend to pygame. Kept Matplotlib as a dependency to ensure backwards compatibility.
 
-## [Unreleased]
+## [0.0.2 - Unreleased]
 ### Added
 - Changelog file.
 
