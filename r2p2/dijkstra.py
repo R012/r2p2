@@ -106,6 +106,7 @@ def search_dijkstra(origin, goal, grid, heur=None):
 
     while q:
         u = min(q, key=lambda v: dist[v])
+        pp.expanded_nodes += 1
         q.remove(u)
         if dist[u] == float('inf') or u == goal:
             break
@@ -144,6 +145,7 @@ def search_dijkstra_mesh(origin, goal, mesh, heur=None):
 
     while q:
         u = min(q, key=lambda v: dist[v])
+        pp.expanded_nodes += 1
         q.remove(u)
         if dist[u] == float('inf') or u == goal:
             break

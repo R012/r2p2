@@ -371,7 +371,9 @@ class Robot:
         self.__manage_collisions(col)
         #self.angular_velocity, acc = self.controller.control(ang, dst)
         #self.change_acceleration(acc)
-        self.angular_velocity, self.speed = self.controller.control(ang, dst)
+        self.controller.set_dst(dst)
+        self.controller.set_ang(ang)
+        self.speed, self.angular_velocity = self.controller.control(dst)
 
     def update(self, env, delta):
         """

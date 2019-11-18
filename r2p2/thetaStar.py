@@ -1,4 +1,4 @@
-""" This module implements the A* path planning algorithm.
+""" This module implements the Theta* path planning algorithm.
 
 Two variants are included: grid-based, and mesh-based.
 
@@ -32,6 +32,7 @@ __version__ = "0.0.1"
 """
 
 import path_planning as pp
+import utils as u
 
 def children(point,grid):
     """
@@ -81,9 +82,14 @@ def children(point,grid):
                      [(x+1, y), (x,y + 1), (x+1, y+1)]]
     return [link for link in links if link.value != 9]
 
-def aStar(start, goal, grid, heur='naive'):
+def line_of_sight(node0, node1):
+    if node0 is None or node1 is None:
+        return False
+    return u.los_raycasting(node0.point, node1.point, u.npdata) is None
+
+def thetaStar(start, goal, grid, heur='naive'):
     """
-        Executes the A* path planning algorithm over a given grid.
+        Executes the Theta* path planning algorithm over a given grid.
         Inputs:
             - start: node from which to start.
             - goal: node to which it is desired to arrive.
@@ -106,7 +112,6 @@ def aStar(start, goal, grid, heur='naive'):
     while openset:
         #Find the item in the open set with the lowest G + H score
         current = min(openset, key=lambda o:o.G + o.H)
-        pp.expanded_nodes += 1
         #If it is the item we want, retrace the path and return it
         if current == goal:
             path = []
@@ -126,12 +131,20 @@ def aStar(start, goal, grid, heur='naive'):
                 continue
             #Otherwise if it is already in the open set
             if node in openset:
-                #Check if we beat the G score 
-                new_g = current.G + current.move_cost(node)
-                if node.G > new_g:
-                    #If so, update the node to have a new parent
-                    node.G = new_g
-                    node.parent = current
+                if line_of_sight(current.parent, node):
+                    #Check if we beat the G score 
+                    new_g = current.parent.G + current.move_cost(node)
+                    if node.G > new_g:
+                        #If so, update the node to have a new parent
+                        node.G = new_g
+                        node.parent = current.parent
+                else:
+                    #Check if we beat the G score 
+                    new_g = current.G + current.move_cost(node)
+                    if node.G > new_g:
+                        #If so, update the node to have a new parent
+                        node.G = new_g
+                        node.parent = current
             else:
                 #If it isn't in the open set, calculate the G and H score for the node
                 node.G = current.G + current.move_cost(node)
@@ -143,11 +156,11 @@ def aStar(start, goal, grid, heur='naive'):
     #Throw an exception if there is no path
     raise ValueError('No Path Found')
 
-pp.register_search_method('A*', aStar)
+pp.register_search_method('Theta*', thetaStar)
 
-def aStar_mesh(start, goal, grid, heur='naive'):
+def thetaStar_mesh(start, goal, grid, heur='naive'):
     """
-        Executes the A* path planning algorithm over a given nav mesh.
+        Executes the Theta* path planning algorithm over a given nav mesh.
         Inputs:
             - start: node from which to start.
             - goal: node to which it is desired to arrive.
@@ -170,7 +183,6 @@ def aStar_mesh(start, goal, grid, heur='naive'):
     while openset:
         #Find the item in the open set with the lowest G + H score
         current = min(openset, key=lambda o:o.G + o.H)
-        pp.expanded_nodes += 1
         #If it is the item we want, retrace the path and return it
         if current == goal:
             path = []
@@ -190,12 +202,20 @@ def aStar_mesh(start, goal, grid, heur='naive'):
                 continue
             #Otherwise if it is already in the open set
             if node in openset:
-                #Check if we beat the G score 
-                new_g = current.G + current.move_cost(node)
-                if node.G > new_g:
-                    #If so, update the node to have a new parent
-                    node.G = new_g
-                    node.parent = current
+                if line_of_sight(current.parent, node):
+                    #Check if we beat the G score 
+                    new_g = current.parent.G + current.move_cost(node)
+                    if node.G > new_g:
+                        #If so, update the node to have a new parent
+                        node.G = new_g
+                        node.parent = current.parent
+                else:
+                    #Check if we beat the G score 
+                    new_g = current.G + current.move_cost(node)
+                    if node.G > new_g:
+                        #If so, update the node to have a new parent
+                        node.G = new_g
+                        node.parent = current
             else:
                 #If it isn't in the open set, calculate the G and H score for the node
                 node.G = current.G + current.move_cost(node)
@@ -207,4 +227,4 @@ def aStar_mesh(start, goal, grid, heur='naive'):
     #Throw an exception if there is no path
     raise ValueError('No Path Found')
 
-pp.register_search_method('A* mesh', aStar_mesh)
+pp.register_search_method('Theta* mesh', thetaStar_mesh)

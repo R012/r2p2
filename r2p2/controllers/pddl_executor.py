@@ -33,12 +33,16 @@ __version__ = "0.0.1"
 import time
 import re
 import controller as c
+from controllers.pid_controller import Sequential_PID_Controller
 import utils as u
 import math
+import numpy as np
+import path_planning as pp
+import pygame
 
 labeled = {}
 
-class PDDL_Executor(c.Controller):
+class PDDL_Executor(Sequential_PID_Controller):
     """
         Class defining what a PDDL_Executor is.
         This class takes in a planning configuration, including the data used to generate said planning,
@@ -62,6 +66,7 @@ class PDDL_Executor(c.Controller):
                 - filepath: path to the file contaning the planning that will be executed.
         """
         super(PDDL_Executor, self).__init__("PDDL")
+        self.goal = []
         self.map_size = u.npdata.shape
         self.tasks = self.__generate_task_list(filepath)
         self.log = open('../logs/planning_execution.log', 'w')
@@ -69,31 +74,39 @@ class PDDL_Executor(c.Controller):
         self.timer = 0.75
         self.__generate_actions()
 
-    def control(self, ang, dst):
+    def control(self, dst):
         """
             Executes the next task in queue. Always returns 0, 0 to the robot,
             instead handling the entirety of the execution of the task on its
             own.
         """
+        self.dst = dst
+        return_value = 0, 0
         if self.timer >= 0.75:
-            self.__parse_task()
+            return_value = self.__parse_task()
         self.timer -= u.delta
         if self.timer <= 0:
             self.timer = 0.75
-        return 0, 0
+        return return_value
 
     def move(self, spot):
         """
             Moves the robot to a specific spot. The actual coordinates are calculated
             as spot×step.
         """
+        if not self.goal:
+            self.__calculate_path(spot)
+            return 0, 0
         if self.__can_execute('move'):
-            destination = (spot[0]*self.robot.step_x, spot[1] * self.robot.step_y)
+            '''destination = (spot[0]*self.robot.step_x, spot[1] * self.robot.step_y)
             print(destination)
             self.robot.orientation = math.degrees(math.atan2(destination[1] - self.robot.y,
                                                              destination[0] - self.robot.x))
-            self.__move(destination)
-            self.__deplete_battery('move')
+            self.__move(destination)'''
+            return_value = super(PDDL_Executor, self).control(self.dst)
+            if not self.goal:
+                self.__deplete_battery('move')
+            return return_value
 
     def move_north(self):
         """
@@ -155,7 +168,7 @@ class PDDL_Executor(c.Controller):
         if self.__can_execute('picture'):
             pic_path = '../logs/'+str(int(time.time()))+'.png'
             self.__place_tag('take_picture')
-            u.plt.savefig(pic_path)
+            pygame.image.save(u.screen,pic_path)
             self.log.write("\t>> Picture saved to "+pic_path+"\n")
             print("\t>> Picture saved to "+pic_path+"\n")
             self.__deplete_battery('picture')
@@ -178,12 +191,36 @@ class PDDL_Executor(c.Controller):
             print(action_name+"\n")
             self.__deplete_battery('generic')
 
+    def has_cur_detected_edge_list(self):
+        """
+            Override and set to true if the controller being implemented holds a list of currently detected edges.
+        """
+        return True
+
+    def goal_oriented(self):
+        """
+            Override and set to true if the controller being implemented operates over a set of goals.
+        """
+        return self.goal
+
+    def __calculate_path(self, dst):
+        step = 100
+        shape = u.npdata.shape
+        step_x = shape[0]/step
+        step_y = shape[1]/step
+        self.goal = pp.run_path_planning(step,
+                                         start=(int(self.robot.x/step_x), int(self.robot.y/step_y)),
+                                         finish=(int(dst[0]), int(dst[1])),
+                                         show_grid=False)
+
     def __parse_task(self):
-        if self.tasks:
+        if self.goal:
+            return self.move(None)
+        elif self.tasks:
             task = self.tasks.pop(0)
             if type(task) is tuple:
                 self.log.write(task[0].lower()+"\n")
-                self.actions[task[0]](self, task[1])
+                return self.actions[task[0]](self, task[1])
             elif task.lower() in self.actions:
                 self.log.write(task.lower()+"\n")
                 self.actions[task.lower()](self)
@@ -192,6 +229,7 @@ class PDDL_Executor(c.Controller):
                 self.actions['generic'](self, task)
         elif not self.log.closed:
             self.log.close()
+        return 0, 0
 
     def __generate_task_list(self, filepath):
         tasks = []
@@ -258,12 +296,8 @@ class PDDL_Executor(c.Controller):
             labeled[pos].append(tag)
         elif offset > 0:
             offset = labeled[pos].index(tag)
-        if u.ax:
-            u.ax.add_patch(u.plt.Circle((self.robot.x,
-                                         self.robot.y), radius=self.robot.radius/2))
-            u.ax.text(self.robot.x + self.robot.radius/2,
-                      self.robot.y-self.robot.radius/2 + 15 * offset,
-                      tag)
+        u.labels.append([(self.robot.x + self.robot.radius/2,
+                      self.robot.y-self.robot.radius/2 + 15 * offset),tag])
 
 def create_pddl_executor(f):
     """

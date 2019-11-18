@@ -46,12 +46,12 @@ class Naive_Controller(controller.Controller):
         """
         super(Naive_Controller, self).__init__("NAIVE")
 
-    def control(self, ang, dst):
+    def control(self, dst):
         """
             Driver function to centralize and standardize the controller. Can be modified by child classes,
             provided that the result value always is a tuple of the form (angular velocity, acceleration)
         """
-        return 0, 3
+        return 3, 0
 
 def create_naive_controller(f):
     """

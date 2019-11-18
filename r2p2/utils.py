@@ -46,8 +46,6 @@ import math
 import json
 import copy
 from robot import Robot
-from threading import Thread
-from controller import Sequential_PID_Controller, Telecom_Controller
 import controller
 
 start_time = time.time()
@@ -55,13 +53,10 @@ last_call = time.time()
 frames = 0
 delta = 0
 pressed = []
-artists = []
+labels = []
 co2_center = (0, 0)
 scale = 1
-xticks = []
-xlabels = []
-yticks = []
-ylabels = []
+grid_size = []
 ax = None
 frozen_dist = None
 fig = None
@@ -69,7 +64,7 @@ npdata = None
 gui = True
 show_robot = True
 button = None
-showFPS = True
+showFPS = False
 run = True
 screen = None
 clock = None
@@ -134,7 +129,7 @@ def create_controller(json_file = '../conf/controller.json'):
         c = controller.controller_factory[f['controller_type']](f)
         return c
 
-def create_robot(json_file = '../conf/robot.json', controller = Telecom_Controller()):
+def create_robot(json_file = '../conf/robot.json', controller = None):
     """
         Uses a json file to generate a fully configured Robot object.
         Inputs:
@@ -175,10 +170,14 @@ def load_simulation(json_file='../conf/config.json'):
                 * stage: string defining the path to the image file that represents the stage to be loaded.
                 * robot: string defining the path to the configuration file of the robot that will be used.
     """
-    global gui, npdata, co2_center
+    global gui, npdata, co2_center, showFPS
     with open(json_file, 'r') as fp:
         f = json.load(fp)
         npdata = load_image(f['stage'])
+        if 'fps' in f:
+            showFPS = f['fps']
+        else:
+            showFPS = False
         if type(f['controller']) is list:
             c = []
             for path in f['controller']:
@@ -227,7 +226,6 @@ def update(robots, npdata):
     for r in robots:
             r.get_lock().acquire()
             r.update(npdata, delta)
-            #r.print_stats()
             r.write_stats_to_log()
             r.get_lock().release()
 
@@ -285,14 +283,9 @@ def display_image(r):
     """
         Driver function that starts the simulation, after being provided an image to use as stage.
     """
-    global screen, npdata, show_robot, clock
-    if show_robot:
-        mpl.rcParams['toolbar'] = 'None'
+    global screen, npdata, show_robot, clock, labels, co2_center
     img = Image.fromarray(np.asarray(np.clip(npdata,0,255), dtype="uint8"), "L")
     img = img.convert("RGB")
-    '''fig = plt.figure()
-    fig.canvas.mpl_connect('close_event', handle_close)
-    plt.gray()'''
     robots = []
     if type(r) is list:
         robots = r
@@ -311,8 +304,8 @@ def display_image(r):
         size = img.size
         img = pygame.image.fromstring(img.tobytes("raw", 'RGB'), size, 'RGB')
         screen = pygame.display.set_mode(size)
+        font = pygame.font.SysFont("BitstreamVeraSans Roman", 23)
         while True:
-            #pressed.clear()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -325,6 +318,54 @@ def display_image(r):
             update(robots, npdata)
             screen.fill((0, 0, 0))
             screen.blit(img, (0, 0))
+            if grid_size:
+                grid_color = (150, 150, 150)
+                font_size = round((grid_size[0]+grid_size[1]) // 2)
+                if font_size > min(grid_size):
+                    font_size = int(min(grid_size))
+                label_font = pygame.font.SysFont("BitstreamVeraSans Roman", font_size)
+                tolerance = 12
+                offset_x = round(grid_size[0]/2)
+                offset_y = round(grid_size[1]/4)
+                for i in range(round(npdata.shape[0]/grid_size[0])+1):
+                    liCoord = round(i * grid_size[0])
+                    pygame.draw.line(screen, grid_color,
+                                     (0, liCoord), (screen.get_width(), liCoord))
+                    if ((grid_size[0] < tolerance and i%5 == 0)\
+                    or grid_size[0] >= tolerance) and\
+                    int(i * grid_size[0] + grid_size[0]//2) - 2 <npdata.shape[0]:
+                        if npdata.item(int(i * grid_size[0] + grid_size[0]//2) - 2,
+                                   int(grid_size[1]//2) - 2) is 0:
+                            font_color = (255, 255, 255)
+                        else:
+                            font_color = (0, 0, 0)
+                        text = label_font.render(str(i), True, font_color)
+                        text_rect = text.get_rect()
+                        text_rect.centerx = int(i * grid_size[1] + offset_x)
+                        text_rect.top = int(offset_y)
+                        screen.blit(text, text_rect)
+                for j in range(round(npdata.shape[1]/grid_size[1])+1):
+                    colCoord = round(j * grid_size[1])
+                    pygame.draw.line(screen, grid_color,
+                                     (colCoord, 0), (colCoord, screen.get_height()))
+                    if ((grid_size[1] < tolerance and j%5 == 0)\
+                    or grid_size[1] >= tolerance) and\
+                    int(grid_size[1]*j+grid_size[1]/2) - 20 < npdata.shape[1]:
+                        if npdata.item(int(grid_size[0]/2) - 2,
+                                   int(grid_size[1]*j+grid_size[1]/2) - 20) is 0:
+                            font_color = (255, 255, 255)
+                        else:
+                            font_color = (0, 0, 0)
+                        text = label_font.render(str(j), True, font_color)
+                        text_rect = text.get_rect()
+                        text_rect.top = int(j * grid_size[0] + offset_y)
+                        text_rect.centerx = int(offset_x)
+                        screen.blit(text, text_rect)
+            if npdata.item(int(co2_center[0]), int(co2_center[1])) is not 0:
+                pygame.draw.line(screen, (125, 0, 0), (co2_center[0]-5, co2_center[1]-5),
+                                 (co2_center[0]+5, co2_center[1]+5), 2)
+                pygame.draw.line(screen, (125, 0, 0), (co2_center[0]-5, co2_center[1]+5),
+                                 (co2_center[0]+5, co2_center[1]-5), 2)
             for robot in robots:
                 if robot.controller.goal_oriented():
                     aux = [(robot.x, robot.y)]
@@ -334,39 +375,17 @@ def display_image(r):
                         pygame.draw.line(screen,(155, 0, 100), aux[i], aux[i+1], 2)
                     for e in aux:
                         pygame.draw.circle(screen, (255, 0, 0), (int(e[0]), int(e[1])), 3)
+            for label in labels:
+                pos = label[0]
+                text = label[1]
+                text = font.render(text, True, (0, 0, 0))
+                text_rect = text.get_rect()
+                text_rect.left = pos[0] + 5
+                text_rect.centery = pos[1]
+                pygame.draw.circle(screen, (0, 0, 0), (int(pos[0]), int(pos[1])), 1)
+                screen.blit(text, text_rect)
             animate(robots)
             pygame.display.flip()
-        '''fig.canvas.mpl_connect('key_press_event', press)
-        fig.canvas.set_window_title(robots[-1].controller.type+"_"+str(robots[-1].identifier))
-        ax = fig.gca()
-        for robot in robots:
-            if robot.controller.goal_oriented():
-                img_d = ImageDraw.Draw(img)
-                aux = [(robot.x, robot.y)]
-                for i in range(0, len(robot.controller.goal)):
-                    aux.append(tuple(robot.controller.goal[i]))
-                img_d.line(aux, fill=(155, 0, 100), width=3)
-                aux_1 = []
-                for a in aux:
-                    aux_1.append([(a[0]-3, a[1]-3), (a[0]+3, a[1]+3)])
-                for a in aux_1:
-                    img_d.ellipse(a, fill=(255, 0, 0))
-                del img_d
-        plt.imshow(img, interpolation='none')
-        ani = animation.FuncAnimation(fig, animate, fargs=(fig, img, robots, npdata, ax, ), interval=0)
-        if xlabels:
-            plt.xticks(xticks, xlabels)
-        if ylabels:
-            plt.yticks(yticks, ylabels)
-        if xlabels or ylabels:
-            plt.grid(which='both', linewidth=1.5)
-        if not show_robot:
-            button = Button(plt.axes([0.7, 0.025, 0.25, 0.05]), 'Toggle play')
-            button.on_clicked(switch_show_robot)
-        t = Thread(target=update_loop, args=(robots, npdata))
-        t.start()
-        plt.show()
-        t.join()'''
     else:
         update_loop(robots, npdata)
 

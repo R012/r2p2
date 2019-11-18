@@ -62,7 +62,7 @@ class Neuro_controller(c.Controller):
         f.write(str(self.fitness()))
         f.close()
 
-    def control(self, ang, dst):
+    def control(self, dst):
         self.update_sensor_angles(ang, dst)
         self.distance += np.linalg.norm((self.robot.x - self.odom[0],\
                                         self.robot.y - self.odom[1]))

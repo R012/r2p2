@@ -82,18 +82,56 @@ def generate_grid(npdata, divider):
     """
     map_size = npdata.shape
     npdata = npdata.copy()
-    chunk_width = map_size[0]/divider
-    chunk_height = map_size[1]/divider
+    if type(divider) is list:
+        chunk_width = map_size[0]/divider[0]
+        chunk_height = map_size[1]/divider[1]
+    else:
+        chunk_width = map_size[0]/divider
+        chunk_height = map_size[1]/divider
+        divider = [divider, divider]
+    print(map_size)
+    print(chunk_width, chunk_height)
     grid = []
-    for i in range(divider):
+    for i in range(divider[1]):
         row = []
-        for j in range(divider):
-            row.append(npdata.item(int(j*chunk_width+chunk_width/2), int(i*chunk_height+chunk_height/2)))
+        for j in range(divider[0]):
+            value = npdata.item(int(j*chunk_width+chunk_width/2), int(i*chunk_height+chunk_height/2))
+            for k in range(int(chunk_height)):
+                for l in range(int(chunk_width)):
+                    if npdata.item(int(j*chunk_width + l), int(i*chunk_height+k)) is 0:
+                        value=0
+                        break
+            row.append(value)
             for y in range(int(i*chunk_height), int(i*chunk_height+chunk_height)):
                 for x in range(int(j*chunk_width), int(j*chunk_width+chunk_width)):
                     npdata[x, y] = row[j]
         grid.append(row)
-    u.npdata = npdata
+    #u.npdata = npdata
+    return grid, chunk_width, chunk_height
+
+def generate_grid_no_divider(npdata):
+    """
+        Auxiliary function that creates a grid using map data as a reference.
+        Inputs:
+            - npdata: map data represented as an nparray.
+            - divider: number of divisions to perform per axis.
+        Outputs:
+            - grid of numbers representing the values of each tile of the
+            generated grid.
+            - width of each tile of the grid.
+            - height of each tile of the grid.
+    """
+    map_size = npdata.shape
+    npdata = npdata.copy()
+    chunk_width = 1
+    chunk_height = 1
+    grid = []
+    for i in range(map_size[1]):
+        row = []
+        for j in range(map_size[0]):
+            value = npdata.item(j, i)
+            row.append(value)
+        grid.append(row)
     return grid, chunk_width, chunk_height
 
 def create_grid(npdata, divider):
@@ -110,6 +148,28 @@ def create_grid(npdata, divider):
     for j in range(len(grid[0])):
         row = []
         for i in range(len(grid)):
+            val = grid[i][j]
+            n = Node(grid[i][j], (int(j*w+w/2),int(i*h+h/2)), (j, i))
+            row.append(n)
+        g.append(row)
+    grid = g
+    return grid
+
+def create_grid_no_divider(npdata):
+    """
+        Auxiliary function that generates a grid of nodes. Generally, use this rather than generate_grid.
+        Inputs:
+            - npdata: map data represented as an nparray.
+            - divider: number of divisions to perform per axis.
+        Outputs:
+            - fully configured grid of nodes.
+    """
+    grid, w, h = generate_grid_no_divider(npdata)
+    g = []
+    for j in range(len(grid[0])):
+        row = []
+        for i in range(len(grid)):
+            val = grid[i][j]
             n = Node(grid[i][j], (int(j*w+w/2),int(i*h+h/2)), (j, i))
             row.append(n)
         g.append(row)
@@ -209,7 +269,7 @@ def generate_waypoints_list_mesh(algo, start, finish, mesh, heur="naive"):
     print("Total nodes expanded: ", expanded_nodes)
     return waypoints
 
-def run_path_planning(grid_size, algo='A*', start=(1, 1), finish=(2,2), heur='naive'):
+def run_path_planning(grid_size, algo='A*', start=(1, 1), finish=(2,2), heur='naive', show_grid=True):
     """
         Configures and runs a given path planning algorithm over a grid.
         Inputs:
@@ -228,10 +288,16 @@ def run_path_planning(grid_size, algo='A*', start=(1, 1), finish=(2,2), heur='na
     u.npdata = np.flipud(u.npdata)
     u.npdata = np.rot90(u.npdata, k=3)
     div = 10
-    u.xticks = np.arange(u.npdata.shape[0], step=u.npdata.shape[0]/grid_size*div)
+    if type(grid_size) is list:
+        width, height = u.npdata.shape[0]/grid_size[1], u.npdata.shape[1]/grid_size[0]
+    else:
+        width, height = u.npdata.shape[0]/grid_size, u.npdata.shape[1]/grid_size
+    '''u.xticks = np.arange(u.npdata.shape[0], step=u.npdata.shape[0]/grid_size*div)
     u.xlabels = [div * i for i in range(0, int(len(grid)/div))]
     u.yticks = np.arange(u.npdata.shape[1], step=u.npdata.shape[1]/grid_size*div)
-    u.ylabels = [div * i for i in range(0, int(len(grid[1])/div))]
+    u.ylabels = [div * i for i in range(0, int(len(grid[1])/div))]'''
+    if show_grid:
+        u.grid_size = [width, height]
     return res
 
 def run_path_planning_mesh(mesh_points, algo='A* mesh', start=(1, 1), finish=(2, 2), heur='naive'):
