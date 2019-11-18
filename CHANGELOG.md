@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 ## [1.0.0b]
 ### Added
 - Added path planning functionalities to the PDDL executor.
-- Added CO2 origina display to the map display functionalities.
+- Added CO2 origin display to the map display functionalities.
 - Added an optional argument to control FPS display.
 - Added a controllers/controllers.py file to centralize imports and registering of newly generated controllers.
 
