@@ -2,5 +2,5 @@
 	"stage": "../res/track_2.png",
 	"robot": "../conf/robot-neuro.json",
 	"controller": "../conf/controller-neuro.json",
-	"gui": true
+	"gui": false
 }

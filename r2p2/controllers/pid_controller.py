@@ -2,10 +2,11 @@ import math
 import numpy as np
 import utils as u
 import path_planning as pp
-from controller import Controller, register_controller_factory
+import json
+from controller import Controller
 
 class Sequential_PID_Controller(Controller):
-    def __init__(self, goal=[(0,0)], ap=8, ai=0.015, ad=0.02, lp=0.4, li=0.015, ld=0.02):
+    def __init__(self):
         """
             Constructor for the Sequential_PID_Controller class.
             Initializes its goal list and proportionality constants.
@@ -14,24 +15,26 @@ class Sequential_PID_Controller(Controller):
                 - lp, li, ld: proportionality constants for linear acceleration.
         """
         super(Sequential_PID_Controller, self).__init__("SEQ_PID")
-        self.goal = goal
-        self.ap = ap
-        self.ai = ai
-        self.ad = ad
-        self.lp = lp
-        self.li = li
-        self.ld = ld
-        self.accumulated_angle_error = 0
-        self.accumulated_distance_error = 0
-        self.last_angle_error = 0
-        self.last_distance_error = 0
-        self.max_acceleration = 5
-        self.detected_edges = []
-        self.cur_detected_edges = []
-        self.actual_sensor_angles = []
-        self.cur_detected_edges_distances = []
-        self.target_angle = 0
-        self.state = 0
+        with open('../conf/controller-PID.json', 'r') as fp:
+            f = json.load(fp)
+            self.goal = f['goal']
+            self.ap = f['ap']
+            self.ai = f['ai']
+            self.ad = f['ad']
+            self.lp = f['lp']
+            self.li = f['li']
+            self.ld = f['ld']
+            self.accumulated_angle_error = 0
+            self.accumulated_distance_error = 0
+            self.last_angle_error = 0
+            self.last_distance_error = 0
+            self.max_acceleration = 5
+            self.detected_edges = []
+            self.cur_detected_edges = []
+            self.actual_sensor_angles = []
+            self.cur_detected_edges_distances = []
+            self.target_angle = 0
+            self.state = 0
 
     def control(self, dst):
         """
@@ -215,8 +218,6 @@ class Sequential_PID_Controller(Controller):
         """
         rng = self.robot.vision_range[-1]
         tolerance = self.robot.vision_range[0]/rng * 13
-        #print("Tolerance:", tolerance)
-        #if dst[-1]/rng < tolerance or dst[0]/rng < tolerance or dst[1]/rng < tolerance or dst[2]/rng < tolerance or dst[-2]/rng < tolerance:
         if (dst[-1]/rng < tolerance and dst[-2]/rng < tolerance) or\
            (dst[1]/rng < tolerance and dst[2]/rng < tolerance) or\
            dst[0]/rng < tolerance:
@@ -259,36 +260,8 @@ class Sequential_PID_Controller(Controller):
             Python's math library handles most of the heavylifting.
         """
         self.target_angle = math.degrees(math.atan2((self.goal[0][1] - self.robot.y), (self.goal[0][0] - self.robot.x)))
-        #self.target_angle %= 360
 
-def create_seq_pid_controller(f):
-    """
-        Factory for a sequential PID controller.
-        Inputs:
-            - f: dictionary containing all necessary configuration variables, namely a list of goals, and 6 proportionality
-            constants (ap, ai, ad, lp, li, ld) which will be used to define the PID controller proper (a stands for angular,
-            l for linear).
-        Outputs:
-            - A fully configured and ready to use Sequential_PID_Controller object.
-    """
-    controller = Sequential_PID_Controller(goal=f['goal'])
-    if 'ap' in f:
-        controller.ap = f['ap']
-    if 'ai' in f:
-        controller.ai = f['ai']
-    if 'ad' in f:
-        controller.ad = f['ad']
-    if 'lp' in f:
-        controller.lp = f['lp']
-    if 'li' in f:
-        controller.li = f['li']
-    if 'ld' in f:
-        controller.ld = f['ld']
-    return controller
-
-register_controller_factory("SEQ_PID", create_seq_pid_controller)
-
-def create_path_planning_controller(f):
+def path_planning_controller():
     """
         Factory for a PID controller which uses path planning in order to determine what waypoints must be visited.
         Inputs:
@@ -301,27 +274,13 @@ def create_path_planning_controller(f):
         Outputs:
             - A fully configured and ready to use Sequential_PID_Controller object.
     """
-    if f['start'] == f['goal']:
-        raise ValueError('Start and goal are the same spot.')
-    #u.switch_show_robot(1)
-    if 'mesh' in f['algorithm']:
-        controller = Sequential_PID_Controller(goal=pp.run_path_planning_mesh(f['waypoints'], f['algorithm'], f['start'], f['goal'], f['heuristic']))
-    else:
-        controller = Sequential_PID_Controller(goal=pp.run_path_planning(f['grid_size'], f['algorithm'], f['start'], f['goal'], f['heuristic']))
-
-    if 'ap' in f:
-        controller.ap = f['ap']
-    if 'ai' in f:
-        controller.ai = f['ai']
-    if 'ad' in f:
-        controller.ad = f['ad']
-    if 'lp' in f:
-        controller.lp = f['lp']
-    if 'li' in f:
-        controller.li = f['li']
-    if 'ld' in f:
-        controller.ld = f['ld']
-        
+    with open('../conf/controller-pathplanning.json', 'r') as fp:
+        f = json.load(fp)
+        if f['start'] == f['goal']:
+            raise ValueError('Start and goal are the same spot.')
+        controller = Sequential_PID_Controller()
+        if 'mesh' in f['algorithm']:
+            controller.goal=pp.run_path_planning_mesh(f['waypoints'], f['algorithm'], f['start'], f['goal'], f['heuristic'])
+        else:
+            controller.goal=pp.run_path_planning(f['grid_size'], f['algorithm'], f['start'], f['goal'], f['heuristic'])  
     return controller
-
-register_controller_factory("PATH_PLANNING", create_path_planning_controller)

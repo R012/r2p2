@@ -39,20 +39,6 @@ import math
 import numpy as np
 import utils as u
 
-controller_factory = {}
-
-def register_controller_factory(controller_type, factory):
-    """
-        Call this function to register your controller factory. It must be a previously defined function.
-        Inputs:
-            - controller_type: string identifying the type of controller this factory creates. It must be the same string used
-            to define the type in configuration files.
-            - factory: factory function pointer. The new function must expect a dictionary as input, and return a Controller
-            object.
-    """
-    global controller_factory
-    controller_factory[controller_type] = factory
-
 class Controller(ABC):
     """
         Base controller class. DO NOT INSTANCE.
@@ -141,5 +127,3 @@ class Controller(ABC):
 
     def set_ang(self, ang):
         self.ang = ang
-
-from controllers import controllers

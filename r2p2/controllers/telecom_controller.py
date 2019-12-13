@@ -1,6 +1,6 @@
 import pygame
 import utils as u
-from controller import Controller, register_controller_factory
+from controller import Controller
 
 pygame.joystick.init()
 if pygame.joystick.get_count() > 0:
@@ -101,17 +101,3 @@ class Telecom_Controller(Controller):
             Always returns false, given that the controller doesn't have a list of goals to accomplish.
         """
         return False
-
-
-def create_telecom_controller(f):
-    """
-        Factory for a Telecom controller.
-        Inputs:
-            - f: a dictionary representing all configuration parameters. Can be empty, and it will not cause errors.
-            Kept in order to standardize factory input.
-        Outputs:
-            - A fully configured Telecom_Controller object.
-    """
-    return Telecom_Controller()
-
-register_controller_factory("TELECOM", create_telecom_controller)

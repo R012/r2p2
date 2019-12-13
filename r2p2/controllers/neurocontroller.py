@@ -10,7 +10,7 @@ import controller as c
 import utils as u
 
 class Neuro_controller(c.Controller):
-    def __init__(self, weights, hidden_layer, activation, tme, evolve):
+    def __init__(self):
         super(Neuro_controller, self).__init__("NEURO")
         self.n_sonar = 0
         self.ann = 0
@@ -19,12 +19,14 @@ class Neuro_controller(c.Controller):
         self.odom = (-1, -1)
         self.origin = (-1, -1)
         self.distance = 0
-        self.weights = weights
-        self.hidden_layer = hidden_layer
-        self.activation = activation
-        self.time = tme
-        self.epoch_time = self.time
-        self.evolve = evolve
+        with open('../conf/controller-neuro.json', 'r') as fp:
+            f = json.load(fp)
+            self.weights = f['weights']
+            self.hidden_layer = f['hidden_layer']
+            self.activation = f['activation']
+            self.time = f['time']
+            self.epoch_time = self.time
+            self.evolve = f['evolve']
         self.log = open("../logs/neuro.log", 'w')
         self.cur_detected_edges = []
         self.actual_sensor_angles = []
@@ -63,7 +65,7 @@ class Neuro_controller(c.Controller):
         f.close()
 
     def control(self, dst):
-        self.update_sensor_angles(ang, dst)
+        self.update_sensor_angles(self.ang, dst)
         self.distance += np.linalg.norm((self.robot.x - self.odom[0],\
                                         self.robot.y - self.odom[1]))
         self.odom = (self.robot.x, self.robot.y)
@@ -175,8 +177,3 @@ class Neuro_controller(c.Controller):
         except Exception as e:
             print(e)
             self.__load_new_params()
-
-def create_neuro_controller(f):
-    return Neuro_controller(f['weights'], f['hidden_layer'], f['activation'], f['time'], f['evolve'])
-
-c.register_controller_factory("NEURO", create_neuro_controller)

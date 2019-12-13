@@ -53,14 +53,3 @@ class Naive_Controller(controller.Controller):
         """
         return 3, 0
 
-def create_naive_controller(f):
-    """
-        Factory for the Naive_Controller class.
-        Inputs:
-            - f: dictionary. It doesn't get used, it just needs to be included for the sake of standarizing input.
-        Outputs:
-            - Fully configured Naive_Controller object.
-    """
-    return Naive_Controller()
-
-controller.register_controller_factory("NAIVE", create_naive_controller)

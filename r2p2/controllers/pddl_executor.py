@@ -39,6 +39,7 @@ import math
 import numpy as np
 import path_planning as pp
 import pygame
+import json
 
 labeled = {}
 
@@ -50,7 +51,7 @@ class PDDL_Executor(Sequential_PID_Controller):
         Battery issues can be avoided simply y setting costs to 0 and battery to 1, making it unnecessary
         to recharge.
     """
-    def __init__(self, filepath):
+    def __init__(self):
         """
             Constructor for the PDDL_Executor.
             Aside from a filepath to the planning to be executed, it takes in
@@ -65,10 +66,13 @@ class PDDL_Executor(Sequential_PID_Controller):
                 - picture_cost: amount of battery that must be spent in order to take a picture.
                 - filepath: path to the file contaning the planning that will be executed.
         """
-        super(PDDL_Executor, self).__init__("PDDL")
+        super(PDDL_Executor, self).__init__()
+        self.type = "PDDL"
         self.goal = []
         self.map_size = u.npdata.shape
-        self.tasks = self.__generate_task_list(filepath)
+        with open('../conf/controller-planning.json', 'r') as fp:
+            f = json.load(fp)
+            self.tasks = self.__generate_task_list(f['plan_path'])
         self.log = open('../logs/planning_execution.log', 'w')
         self.actions = {}
         self.timer = 0.75
@@ -298,19 +302,3 @@ class PDDL_Executor(Sequential_PID_Controller):
             offset = labeled[pos].index(tag)
         u.labels.append([(self.robot.x + self.robot.radius/2,
                       self.robot.y-self.robot.radius/2 + 15 * offset),tag])
-
-def create_pddl_executor(f):
-    """
-        Factory to create PDDL_Executor objects.
-        Inputs:
-            - f: dictionary containing the following:
-                - the parameters required to instance a PDDL_Executor. Refer to `PDDL_Executor.__init__` for more information.
-                - co2_center: numeric 1D array of length two, defining the x, y center of the CO2 source for this scenario.
-                - co2_radius: numeric value identifying the radius in which the CO2 extends.
-        Outputs:
-            - a fully configured PDDL_Executor object.
-    """
-    u.showFPS = False
-    return PDDL_Executor(f['plan_path'])
-
-c.register_controller_factory('PDDL', create_pddl_executor)

@@ -1,7 +1,7 @@
 {
-	"controller_type": "NEURO",
+	"class": "neurocontroller.Neuro_controller",
 	"weights": [0.0, 0.0],
-	"hidden_layer": [1],
+	"hidden_layer": [10, 7, 4],
 	"activation": "tanh",
 	"time": 20,
 	"evolve": true

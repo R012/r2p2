@@ -1,5 +1,5 @@
 {
-	"controller_type": "PATH_PLANNING",
+	"class": "pid_controller.path_planning_controller",
 	"grid_size": 30,
 	"waypoints": [[40, 40], [310, 300], [290, 300], 
 				  [195, 200], [200, 100],[375, 407], 
@@ -13,12 +13,5 @@
 	"algorithm": "A*",
 	"heuristic": "naive",
 	"start": [18, 19],
-	"goal": [12, 12],
-
-	"ap": 2,
-	"ai": 0.015,
-	"ad": 0.016,
-	"lp": 0.5,
-	"li": 0.015,
-	"ld": 0.016
+	"goal": [12, 12]
 }

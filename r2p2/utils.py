@@ -47,6 +47,7 @@ import json
 import copy
 from robot import Robot
 import controller
+from controllers.controllers import load_controller
 
 start_time = time.time()
 last_call = time.time()
@@ -126,7 +127,7 @@ def create_controller(json_file = '../conf/controller.json'):
     global npdata
     with open(json_file, 'r') as fp:
         f = json.load(fp)
-        c = controller.controller_factory[f['controller_type']](f)
+        c = load_controller(f['class'])()
         return c
 
 def create_robot(json_file = '../conf/robot.json', controller = None):
@@ -216,7 +217,6 @@ def update_loop(robots, npdata):
             r.get_lock().acquire()
             r.update(npdata, delta)
             r.write_stats_to_log()
-            r.write_stats()
             r.get_lock().release()
         pressed.clear()
         time.sleep(1/80)

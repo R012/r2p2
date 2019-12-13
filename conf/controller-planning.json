@@ -1,4 +1,4 @@
 {
-	"controller_type": "PDDL",
+	"class": "pddl_executor.PDDL_Executor",
 	"plan_path": "../res/planning.txt"
 }
