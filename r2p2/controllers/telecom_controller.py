@@ -16,7 +16,7 @@ class Telecom_Controller(Controller):
         """
             Good old controller. Doesn't need any input.
         """
-        super(Telecom_Controller, self).__init__("TELECOM")
+        super().__init__("TELECOM")
         self.detected_edges = []
         self.cur_detected_edges = []
         self.actual_sensor_angles = []

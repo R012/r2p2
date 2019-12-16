@@ -44,7 +44,7 @@ class Naive_Controller(controller.Controller):
             Outputs:
                 - A configured Naive_Controller object.
         """
-        super(Naive_Controller, self).__init__("NAIVE")
+        super().__init__("NAIVE")
 
     def control(self, dst):
         """

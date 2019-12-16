@@ -1,5 +1,5 @@
 {
-	"stage": "../res/test.png",
+	"stage": "../res/sandbox.png",
 	"robot": "../conf/robot.json",
 	"controller": "../conf/controller-planning.json",
 	"gui": true,
