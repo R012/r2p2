@@ -14,7 +14,7 @@ class Sequential_PID_Controller(Controller):
                 - ap, ai, ad: proportionality constants for angular velocity.
                 - lp, li, ld: proportionality constants for linear acceleration.
         """
-        super(Sequential_PID_Controller, self).__init__("SEQ_PID")
+        super().__init__("SEQ_PID")
         with open('../conf/controller-PID.json', 'r') as fp:
             f = json.load(fp)
             self.goal = f['goal']
@@ -43,7 +43,7 @@ class Sequential_PID_Controller(Controller):
             controller's obstacle avoidance policy in the form of a very simple
             state machine that needs to be managed.
         """
-        super(Sequential_PID_Controller, self).control(dst)
+        super().control(dst)
         self.manage_state(self.dst)
         if self.state is 0 or self.state is 2:
             return self.control_advance(self.ang, dst)

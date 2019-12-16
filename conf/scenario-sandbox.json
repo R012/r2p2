@@ -1,0 +1,6 @@
+{
+	"stage": "../res/sandbox.png",
+	"robot": ["../conf/robot_2.json"],
+	"controller": "../conf/controller-telecom.json",
+	"gui": true
+}
