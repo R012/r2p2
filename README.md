@@ -90,9 +90,10 @@ The simulator uses three main types of configuration files:
 	 - controller: path to the controller's configuration file.
 	 - gui: boolean indicating whether to use a graphical user interface. Set to true by default.
  - robot.json:  configures robots. It must contain information related to its radius and sonars, as well as parameters such as its maximum linear velocity and starting position. Please, refer to the sample files provided with the simulator to get more information.
- - controller-XYZ.json:  configures specific controllers. Required fields are completely controller-dependant. Please, refer to the sample configuration files provided with this simulator, as well as the controller in question's documentation in order to properly generate controller configuration files.
+ - controller-XYZ.json:  configures specific controllers. The only required field is "class", which specifies the class that implements the controller. Each controller type require different fields, please, refer to the sample configuration files provided with this simulator, as well as the controller in question's documentation in order to properly generate controller configuration files.
 
 If you are using this simulator for path planning purposes, please, do not replace the PID constants in order to avoid more erratic behavior cropping up. If in doubt, the default constants are:
+
 ```Json
   "ap": 2
   "ai": 0.015
@@ -106,7 +107,7 @@ If you are using this simulator for path planning purposes, please, do not repla
  
  `grid_size` should always have a smaller value than the smallest dimension of the map in use. This is, a grid_size of 500 on a map of 450 by 425 is likely to cause faulty behavior, due to the dimensions used.
 
-## Creating stage files
-In order to create a stage file, simply create an image file using your image editor of choice. Only black is taken as a wall by the simulator, although darker areas will potentially generate areas considered harder to traverse.
+## Creating scenario files
+In order to create a scenario file, simply create an image file using your image editor of choice. Only black is taken as a wall by the simulator, although darker areas will potentially generate areas considered harder to traverse.
 
 Any color may be used in order to fill in darker areas, although the simulator will automatically transform it into levels on run time.
