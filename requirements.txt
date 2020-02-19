@@ -1,7 +1,9 @@
 numpy
+pandas
 matplotlib
-Pillow
+seaborn>=0.9
 scikit-learn
-scipy
+Pillow
+scipy==1.1.0
 inspyred
 pygame
