@@ -15,7 +15,7 @@ git clone https://github.com/ISG-UAH/r2p2.git
 ```
 As an alternative you can download a zip file with the simulator as a direct download (checkout out the green button un the [https://github.com/ISG-UAH/r2p2](r2p2 repository)).
 
-### Conda environment
+## Conda environment
 
 We highly recommend to install r2p2 and its dependencies in a Conda environment as it maintains all the system independent from your host.
 
