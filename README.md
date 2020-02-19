@@ -1,4 +1,4 @@
-# r2p2
+# r2p2 robot simulator
 
 Simple robot simulator written in Python 3.
 Module based, and focused on extensibility.
@@ -6,57 +6,25 @@ Check requirements.txt for more detailed information on what Python modules need
 
 Developed and tested on Python 3.7.
 
-## Setup
+## Download
 
-In order to run the simulation, you first need to install its dependencies. For that, follow these steps. All dependencies should be available using pip:
-1. Install numpy:
-```Bash
-pip install numpy
-```
-Depending on how your environment is configured, your operating system might be unable to identify pip as a Python module. In that case, try running the following:
-```Bash
-python -m pip install numpy
-```
-2. Install matplotlib:
-```Bash
-pip install matplotlib
-```
-Once again, if that doesn't work, the following might solve the problem:
-```Bash
-python -m pip install matplotlib
-```
-3. Install Pillow:
-```Bash
-pip install Pillow
-```
-or
-```Bash
-python -m pip install pillow
-```
-per usual.
+R2p2 is hosted in GitHub, so you can clone de repository as usual in Git:
 
-4. Install scikit-learn:
 ```Bash
-pip install scikit-learn
+git clone https://github.com/ISG-UAH/r2p2.git
 ```
-or
-```Bash
-python -m pip install scikit-learn
-```
-5. Install scipy:
-```Bash
-pip install scipy
-```
-or
-```Bash
-python -m pip install scipy
-```
+As an alternative you can download a zip file with the simulator as a direct download (checkout out the green button un the (r2p2 repository)[https://github.com/ISG-UAH/r2p2]).
 
 ### Conda environment
-Creating a Conda environment to run the simulator is extremely easy. Simply start your Conda console (if you are on Windows), or a regular command prompt and execute:
+
+We highly recommend to install r2p2 and its dependencies in a Conda environment as it maintains all the system independent from your host.
+
+Install python 3.X version of (Anaconda)[https://www.anaconda.com/distribution/] and then create a new conda environment.  Creating a Conda environment to run the simulator is extremely easy. Simply start your Conda console (if you are on Windows), or a regular command prompt and execute:
+
 ```Bash
 conda create --name [name of the new environment] python=3.7
 ```
+
 replacing `[name of the new environment]` for the actual name you want to use, for instance, `r2p2`, and pressing `y` when prompted to.
 
 Next, enter the environment using
@@ -67,26 +35,42 @@ and confirm that the result of
 ```Bash
 python --version
 ```
-is `Python 3.7.x`.
+is `Python 3.7.x`. Please observe that the prompt displays the environment you are running.
 
-Afterwards, install the dependencies as described above. You may also use 
+Afterwards, install the dependencies using pip and the requirements.txt file.
+
 ```Bash
-conda install [package name]
+ pip3 install -r requirements.txt
 ```
-instead of pip.
+It should download and install automatically all the r2p2 dependencies.
+
+And that's it, you are ready to run r2p2.
+
 
 ## Running the simulator
 
 In order to run the simulator, simply execute the following command:
+
+```Bash
+python r2p2.py
+```
+
+which runs a default scenario with a teleoperated robot on it. You can command 
+the robot by using the arrows keys in the keyboard or a joystick.
+
+Changing the simulated scenario is straitfoorward, just use the scenario parameter.
+
 ```Bash
 python r2p2.py --scenario [path to scenario configuration JSON]
 ```
 
 Additionally, if you would like to see the program's help, you may execute
+
 ```Bash
 python r2p2.py --help
 ```
 or
+
 ```Bash
 python r2p2.py -h
 ```
