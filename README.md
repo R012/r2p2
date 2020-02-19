@@ -49,7 +49,7 @@ And that's it, you are ready to run r2p2.
 
 ## Running the simulator
 
-In order to run the simulator, simply execute the following command:
+In order to run the simulator, simply execute the following command from the r2p2 folder:
 
 ```Bash
 python r2p2.py
