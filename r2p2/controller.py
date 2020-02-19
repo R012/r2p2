@@ -53,6 +53,7 @@ class Controller(ABC):
         """
         self.type = controller_type
         self.cur_detected_edges_distances = []
+        self.cur_detected_edges = []
         self.actual_sensor_angles = []
         self.ang = []
         self.dst = []
