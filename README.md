@@ -13,13 +13,13 @@ R2p2 is hosted in GitHub, so you can clone de repository as usual in Git:
 ```Bash
 git clone https://github.com/ISG-UAH/r2p2.git
 ```
-As an alternative you can download a zip file with the simulator as a direct download (checkout out the green button un the (r2p2 repository)[https://github.com/ISG-UAH/r2p2]).
+As an alternative you can download a zip file with the simulator as a direct download (checkout out the green button un the [r2p2 repository](https://github.com/ISG-UAH/r2p2)).
 
 ## Conda environment
 
 We highly recommend to install r2p2 and its dependencies in a Conda environment as it maintains all the system independent from your host.
 
-Install python 3.X version of (Anaconda)[https://www.anaconda.com/distribution/] and then create a new conda environment.  Creating a Conda environment to run the simulator is extremely easy. Simply start your Conda console (if you are on Windows), or a regular command prompt and execute:
+Install python 3.X version of [Anaconda](https://www.anaconda.com/distribution/) and then create a new conda environment.  Creating a Conda environment to run the simulator is extremely easy. Simply start your Conda console (if you are on Windows), or a regular command prompt and execute:
 
 ```Bash
 conda create --name [name of the new environment] python=3.7
