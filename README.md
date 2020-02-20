@@ -13,7 +13,7 @@ R2p2 is hosted in GitHub, so you can clone de repository as usual in Git:
 ```Bash
 git clone https://github.com/ISG-UAH/r2p2.git
 ```
-As an alternative you can download a zip file with the simulator as a direct download (checkout out the green button un the [r2p2 repository](https://github.com/ISG-UAH/r2p2)).
+As an alternative you can download a zip file with the simulator as a direct download (checkout out the green button in the [r2p2 repository](https://github.com/ISG-UAH/r2p2)).
 
 ## Conda environment
 
