@@ -8,7 +8,7 @@ Developed and tested on Python 3.7.
 
 ## Download
 
-R2p2 is hosted in GitHub, so you can clone de repository as usual in Git:
+R2p2 is hosted in GitHub, so you can clone the repository as usual in Git:
 
 ```Bash
 git clone https://github.com/ISG-UAH/r2p2.git
