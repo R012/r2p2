@@ -24,7 +24,7 @@ class Neuro_controller(c.Controller):
             self.weights = f['weights']
             self.hidden_layer = f['hidden_layer']
             self.activation = f['activation']
-            self.time = f['time']
+            self.time = f['time'] * 1000
             self.epoch_time = self.time
             self.evolve = f['evolve']
         self.log = open("../logs/neuro.log", 'w')
