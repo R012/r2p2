@@ -197,7 +197,6 @@ class Robot:
 
         if max_spot != (-1, -1):
             max_disp_vector = (max_spot[0] - self.x - self.radius, max_spot[1] - self.y - self.radius)
-            
             if env.item(int(calculated_x), int(calculated_y)) is 0:
                 self.collide((self.x, self.y))
                 if max_spot[0] - self.x > 0:
@@ -374,6 +373,8 @@ class Robot:
         self.controller.set_dst(dst)
         self.controller.set_ang(ang)
         self.speed, self.angular_velocity = self.controller.control(dst)
+        if abs(self.speed) > self.max_speed:
+            self.speed = self.speed/abs(self.speed) * self.max_speed
 
     def update(self, env, delta):
         """
