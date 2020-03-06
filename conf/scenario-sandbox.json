@@ -1,6 +1,6 @@
 {
 	"stage": "../res/sandbox.png",
-	"robot": ["../conf/robot_2.json"],
+	"robot": ["../conf/robot_omni.json"],
 	"controller": "../conf/controller-telecom.json",
 	"gui": true
 }
