@@ -1,0 +1,6 @@
+{
+	"stage": "../res/track_2.png",
+	"robot": "../conf/robot_omni.json",
+	"controller": "../conf/controller-inspyred.json",
+	"gui": true
+}
