@@ -19,7 +19,7 @@ At all
 
 12: (recharge_batteries )
 
-11: (move r p3030 p6075)
+11: (move r p3030 p2025)
 
 13: (take_picture )
 
@@ -27,7 +27,7 @@ At all
 
 15: (recharge_batteries )
 
-17: (move r p6075 p5050)
+17: (move r p2025 p1010)
 
 16: (take_picture )
 
@@ -67,11 +67,11 @@ At all
 
 15: (recharge_batteries )
 
-21: (move r p5050 p4560)
+21: (move r p2020 p2530)
 
 22: (get_co2_reading )
 
-21: (move r p4560 p5080)
+21: (move r p2530 p3010)
 
 23: (drill)
 

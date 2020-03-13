@@ -234,7 +234,7 @@ def animate(robots):
         Update function. Updates internal world data, then prints it to a plot.
         Must be registered to said plot.
     """
-    global start_time, frames, delta, show_robot, screen, clock
+    global start_time, frames, delta, show_robot, screen, clock, grid_size
     if show_robot:
         for r in robots:
             r.get_lock().acquire()
