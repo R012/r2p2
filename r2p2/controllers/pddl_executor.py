@@ -57,7 +57,6 @@ class PDDL_Executor(Sequential_PID_Controller):
             Aside from a filepath to the planning to be executed, it takes in
             several parameters that help conceptualize the robot to be controlled.
             Inputs:
-                - step: amount of pixels the robot moves in a single step.
                 - battery: max battery, as well as initial battery level.
                 - charging_rate: amount of battery recharged per time step recharging battery.
                 - movement_cost: amount of battery that must be spent in order to move.
@@ -238,13 +237,11 @@ class PDDL_Executor(Sequential_PID_Controller):
     def __generate_task_list(self, filepath):
         tasks = []
         for line in open(filepath):
-            print(line)
-            if re.match(r'^\d(\.|\d)*: \(\w(\w|_)*(\ *(\w(\w|_)*)?)*\)', line):
-                print("It's a match. Creating action.")
-                split_line = line.split()
-                tasks.append(split_line[1].replace('(', '').replace(')', ''))
+            if re.match(r'^\(\w(\w|_)*(\ *(\w(\w|_)*)?)*\)', re.sub(r"(\d(\.|\d)*: ) *", "", line)):
+                split_line = re.sub(r"(\d(\.|\d)*: ) *", "", line).split()
+                tasks.append(split_line[0].replace('(', '').replace(')', ''))
                 if tasks[-1].lower() == 'move':
-                    coords = split_line[4].replace('p', '').replace(')', '')
+                    coords = split_line[3].replace('p', '').replace(')', '')
                     tasks[-1] = (tasks[-1], (int(coords[:2]), int(coords[2:])))
         print("TASKS:")
         print(tasks)
