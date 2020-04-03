@@ -86,3 +86,4 @@ docs/neuroevolutive_controller.html
 r2p2/__pycache__/neurocontroller.cpython-37.pyc
 r2p2/__pycache__/thetaStar.cpython-37.pyc
 r2p2/ga.py
+r2p2/thetaStar.py
