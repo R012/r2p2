@@ -103,7 +103,7 @@ If you are using this simulator for path planning purposes, please, do not repla
   "ld": 0.016
  ```
  ### About grid sizes for path-planning
- In order to modify the size of a grid, edit the controller's `grid_size` attribute (defaulted to 30 in the example provided). It's advisable to use values between 15 and 40 in order not to lose precision without compromising efficiency.
+ In order to modify the size of a grid, edit the controller's `grid_size` attribute (defaulted to 30 in the example provided) in the `controller-pathplanning.json` file. It's advisable to use values between 15 and 40 in order not to lose precision without compromising efficiency.
  
  `grid_size` should always have a smaller value than the smallest dimension of the map in use. This is, a grid_size of 500 on a map of 450 by 425 is likely to cause faulty behavior, due to the dimensions used.
 
