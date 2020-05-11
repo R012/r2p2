@@ -236,11 +236,16 @@ class PDDL_Executor(Sequential_PID_Controller):
 
     def __generate_task_list(self, filepath):
         tasks = []
+        first_move = True
         for line in open(filepath):
             if re.match(r'^\(\w(\w|_)*(\ *(\w(\w|_)*)?)*\)', re.sub(r"(\d(\.|\d)*: ) *", "", line)):
                 split_line = re.sub(r"(\d(\.|\d)*: ) *", "", line).split()
                 tasks.append(split_line[0].replace('(', '').replace(')', ''))
                 if tasks[-1].lower() == 'move':
+                    if first_move:
+                        c = split_line[2].replace('p', '').replace(')', '')
+                        self._robot_x, self._robot_y = (int(c[:2]), int(c[2:]))
+                        first_move = False
                     coords = split_line[3].replace('p', '').replace(')', '')
                     tasks[-1] = (tasks[-1], (int(coords[:2]), int(coords[2:])))
         print("TASKS:")
@@ -299,3 +304,9 @@ class PDDL_Executor(Sequential_PID_Controller):
             offset = labeled[pos].index(tag)
         u.labels.append([(self.robot.x + self.robot.radius/2,
                       self.robot.y-self.robot.radius/2 + 15 * offset),tag])
+
+    def register_robot(self, r):
+        self.robot = r
+        self.robot.x = self._robot_x * u.npdata.shape[0]/40
+        self.robot.y = self._robot_y * u.npdata.shape[1]/40
+        

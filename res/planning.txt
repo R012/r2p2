@@ -11,7 +11,7 @@ At all
 
 
 
-0: (move r p0000 p3030)
+(move r p0515 p3030)
 
 10: (recharge_batteries )
 
