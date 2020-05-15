@@ -261,6 +261,12 @@ class Sequential_PID_Controller(Controller):
         """
         self.target_angle = math.degrees(math.atan2((self.goal[0][1] - self.robot.y), (self.goal[0][0] - self.robot.x)))
 
+    def register_robot(self, r):
+        self.robot = r
+        initial_point = self.goal[0]
+        self.robot.x = initial_point[0]
+        self.robot.y = initial_point[1]
+        
 def path_planning_controller():
     """
         Factory for a PID controller which uses path planning in order to determine what waypoints must be visited.
