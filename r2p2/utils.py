@@ -327,16 +327,18 @@ def display_image(r):
                 tolerance = 12
                 offset_x = round(grid_size[0]/2)
                 offset_y = round(grid_size[1]/4)
-                for i in range(round(npdata.shape[0]/grid_size[0])+1):
+                for i in range(round(npdata.shape[0]/grid_size[1])+1):
                     liCoord = round(i * grid_size[0])
                     pygame.draw.line(screen, grid_color,
                                      (0, liCoord), (screen.get_width(), liCoord))
                     if ((grid_size[0] < tolerance and i%5 == 0)\
-                    or grid_size[0] >= tolerance) and\
-                    int(i * grid_size[0] + grid_size[0]//2) - 2 <npdata.shape[0]:
-                        if npdata.item(int(i * grid_size[0] + grid_size[0]//2) - 2,
-                                   int(grid_size[1]//2) - 2) is 0:
-                            font_color = (255, 255, 255)
+                    or grid_size[0] >= tolerance):
+                        if int(i * grid_size[0] + grid_size[0]//2) - 2 <npdata.shape[0]:
+                            if npdata.item(int(i * grid_size[0] + grid_size[0]//2) - 2,
+                                       int(grid_size[1]//2) - 2) is 0:
+                                font_color = (255, 255, 255)
+                            else:
+                                font_color = (0, 0, 0)
                         else:
                             font_color = (0, 0, 0)
                         text = label_font.render(str(i), True, font_color)
@@ -344,16 +346,20 @@ def display_image(r):
                         text_rect.centerx = int(i * grid_size[1] + offset_x)
                         text_rect.top = int(offset_y)
                         screen.blit(text, text_rect)
-                for j in range(round(npdata.shape[1]/grid_size[1])+1):
+                
+                for j in range(round(npdata.shape[1]/grid_size[0])+1):
                     colCoord = round(j * grid_size[1])
                     pygame.draw.line(screen, grid_color,
                                      (colCoord, 0), (colCoord, screen.get_height()))
                     if ((grid_size[1] < tolerance and j%5 == 0)\
-                    or grid_size[1] >= tolerance) and\
-                    int(grid_size[1]*j+grid_size[1]/2) - 20 < npdata.shape[1]:
-                        if npdata.item(int(grid_size[0]/2) - 2,
-                                   int(grid_size[1]*j+grid_size[1]/2) - 20) is 0:
-                            font_color = (255, 255, 255)
+                    or grid_size[1] >= tolerance):
+                        if int(grid_size[0]/2) < npdata.shape[0] and\
+                        int(grid_size[1]*j+grid_size[1]/2)-20 < npdata.shape[1]:
+                            if npdata.item(int(grid_size[0]/2) - 2,
+                                       int(grid_size[1]*j+grid_size[1]/2) - 20) is 0:
+                                font_color = (255, 255, 255)
+                            else:
+                                font_color = (0, 0, 0)
                         else:
                             font_color = (0, 0, 0)
                         text = label_font.render(str(j), True, font_color)
