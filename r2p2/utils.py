@@ -114,15 +114,14 @@ def get_reading(x, y):
     distance = np.linalg.norm((co2_center[0] - x, co2_center[1] - y))
     return frozen_dist.pdf(distance*scale)
 
-def create_controller():
+def create_controllers():
     """
         Driver function to abstract the process of instancing a Controller object
         using factories.
         Inputs:
-            - json_file: path to the JSON configuration file defining the controller
-            in question.
+            - No input, everything comes from the config global variable
         Outputs:
-            - a fully configured Controller object.
+            - a fully configured Controller object or a list of Controllers, depending on the config
     """
     global npdata
     if 'class' in config:
@@ -130,7 +129,6 @@ def create_controller():
     elif 'controllers' in config and len(config['controllers']) > 0:
         controllers = []
         for ctrl in config['controllers']:
-            print(ctrl['class'])
             controllers.append(load_controller(ctrl['class'])())
         return controllers
     else:
@@ -192,20 +190,31 @@ def load_config(json_file='../conf/config.json'):
                     config['controllers'] = [json.load(conf_file)]
         
 def init_globals_from_config():
+    """
+    Initialize all global variables based on config
+    TODO: Remove global variables and keep only the config dict, to at some point remove it too and pass it as reference if needed
+    """
     showFPS = 'fps' in config
+    gui = config['gui']
+    co2_center = config['co2_center'] if 'co2_center' in config else (0, 0)
 
 
-def get_controllers():
+def create_robots(controllers):
     """
-    Return the list of controllers or the controller if only 1
-    TODO: Review the rest of the logic so we can always have a list of controllers and allow it to work with 1 to N transparently
+    Returns a list of robots or one robot depending on the config
+    (TBC, Pedro) Why did we do a deepcopy of the controller config only when we received 1 controler, but not when multiple?
+    If this is still a requirement, we need to add it to the r.append line
     """
-    controllers = create_controller()
-    if len(controllers) > 1:
-        return controllers
+    if type(config['robot']) is list:
+        r = []
+        for i, path in enumerate(config['robot']):
+            if i >= len(controllers):
+                r.append(create_robot(path, controllers[0]))
+            else:
+                r.append(create_robot(path, controllers[i]))
     else:
-        return controllers[0]
-
+        r = create_robot(config['robot'], controllers[0])
+    return r
 
 def load_simulation(json_file='../conf/config.json'):
     """
@@ -225,27 +234,13 @@ def load_simulation(json_file='../conf/config.json'):
     # Load the image used in the stage
     npdata = load_image(config['stage'])
     # Get the controller if only one or a list of controllers
-    c = get_controllers()
+    controllers = create_controllers()
 
-    gui = config['gui']
-    if 'co2_center' in config:
-        co2_center = config['co2_center']
     if 'co2_radius' in config:
         generate_dist(config['co2_radius'])
-    if type(config['robot']) is list:
-        r = []
-        i = 0
-        for path in config['robot']:
-            if type(c) is list:
-                r.append(create_robot(path, c[i]))
-                i += 1
-                if i >= len(c):
-                    i = 0
-            else:
-                r.append(create_robot(path, copy.deepcopy(c)))
-    else:
-        r = create_robot(config['robot'], c)
-    display_image(r)
+    
+    robots = create_robots(controllers)
+    display_image(robots)
 
 def update_loop(robots, npdata):
     global delta, pressed, run
