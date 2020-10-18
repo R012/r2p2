@@ -114,7 +114,7 @@ def get_reading(x, y):
     distance = np.linalg.norm((co2_center[0] - x, co2_center[1] - y))
     return frozen_dist.pdf(distance*scale)
 
-def create_controller(json_file = '../conf/controller.json'):
+def create_controller():
     """
         Driver function to abstract the process of instancing a Controller object
         using factories.
@@ -125,10 +125,16 @@ def create_controller(json_file = '../conf/controller.json'):
             - a fully configured Controller object.
     """
     global npdata
-    with open(json_file, 'r') as fp:
-        f = json.load(fp)
-        c = load_controller(f['class'])()
-        return c
+    if 'class' in config:
+        return load_controller(config['class'])()
+    elif 'controllers' in config and len(config['controllers']) > 0:
+        controllers = []
+        for ctrl in config['controllers']:
+            print(ctrl['class'])
+            controllers.append(load_controller(ctrl['class'])())
+        return controllers
+    else:
+        raise KeyError("The configuration file received doesn't contain a \"class\" attribute")
 
 def create_robot(json_file = '../conf/robot.json', controller = None):
     """
@@ -162,6 +168,45 @@ def create_robot(json_file = '../conf/robot.json', controller = None):
             r.set_color(f['color'])
         return r
 
+def load_config(json_file='../conf/config.json'):
+    """
+        Load the scenario configuration in the global variable "config" and add a "controllers" list
+        with the configuration of the controllers included in that scenario.
+        - "controller" might contain a string with a single path or a list of paths
+    """
+    global config
+    with open(json_file, 'r') as scen_cfg:
+        config = json.load(scen_cfg)
+        if 'controller' in config:
+            # If we get a list of controllers
+            if type(config['controller']) is list:
+                for path in config['controller']:
+                    with open(path, 'r') as conf_file:
+                        if 'controllers' in config:
+                            config['controllers'].append(json.load(conf_file))
+                        else:
+                            config['controllers'] = [json.load(conf_file)]
+            # If we only get one controller
+            else:
+                with open(config['controller'], 'r') as conf_file:
+                    config['controllers'] = [json.load(conf_file)]
+        
+def init_globals_from_config():
+    showFPS = 'fps' in config
+
+
+def get_controllers():
+    """
+    Return the list of controllers or the controller if only 1
+    TODO: Review the rest of the logic so we can always have a list of controllers and allow it to work with 1 to N transparently
+    """
+    controllers = create_controller()
+    if len(controllers) > 1:
+        return controllers
+    else:
+        return controllers[0]
+
+
 def load_simulation(json_file='../conf/config.json'):
     """
         Loads a simulation using a configuration file. For the time being, it limits itself to loading the corresponding map and robot.
@@ -172,38 +217,35 @@ def load_simulation(json_file='../conf/config.json'):
                 * robot: string defining the path to the configuration file of the robot that will be used.
     """
     global gui, npdata, co2_center, showFPS
-    with open(json_file, 'r') as fp:
-        f = json.load(fp)
-        npdata = load_image(f['stage'])
-        if 'fps' in f:
-            showFPS = f['fps']
-        else:
-            showFPS = False
-        if type(f['controller']) is list:
-            c = []
-            for path in f['controller']:
-                c.append(create_controller(path))
-        else:
-            c = create_controller(f['controller'])
-        gui = f['gui']
-        if 'co2_center' in f:
-            co2_center = f['co2_center']
-        if 'co2_radius' in f:
-            generate_dist(f['co2_radius'])
-        if type(f['robot']) is list:
-            r = []
-            i = 0
-            for path in f['robot']:
-                if type(c) is list:
-                    r.append(create_robot(path, c[i]))
-                    i += 1
-                    if i >= len(c):
-                        i = 0
-                else:
-                    r.append(create_robot(path, copy.deepcopy(c)))
-        else:
-            r = create_robot(f['robot'], c)
-        display_image(r)
+    # Load the config in the global variable
+    load_config(json_file)
+    # Init global variables based on config dict
+    # TODO: I think we should refactor everything to only use config as global (Pedro)
+    init_globals_from_config()
+    # Load the image used in the stage
+    npdata = load_image(config['stage'])
+    # Get the controller if only one or a list of controllers
+    c = get_controllers()
+
+    gui = config['gui']
+    if 'co2_center' in config:
+        co2_center = config['co2_center']
+    if 'co2_radius' in config:
+        generate_dist(config['co2_radius'])
+    if type(config['robot']) is list:
+        r = []
+        i = 0
+        for path in config['robot']:
+            if type(c) is list:
+                r.append(create_robot(path, c[i]))
+                i += 1
+                if i >= len(c):
+                    i = 0
+            else:
+                r.append(create_robot(path, copy.deepcopy(c)))
+    else:
+        r = create_robot(config['robot'], c)
+    display_image(r)
 
 def update_loop(robots, npdata):
     global delta, pressed, run
