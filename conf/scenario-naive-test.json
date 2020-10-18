@@ -1,0 +1,6 @@
+{
+	"stage": "../res/stage.png",
+	"robot": ["../conf/robot.json"],
+	"controller": "../conf/controller-naive.json",
+	"gui": true
+}

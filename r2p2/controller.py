@@ -128,3 +128,11 @@ class Controller(ABC):
 
     def set_ang(self, ang):
         self.ang = ang
+
+
+def upd_sensor_angles(function):
+    """Decorator to simplify the implementation of "control" methods on Controller subclasses"""
+    def wrapper(self, dst):
+        self.update_sensor_angles(self.ang, dst)
+        return function(self, dst)
+    return wrapper
