@@ -8,8 +8,8 @@ import controller as c
 import utils as u
 
 class Inspyred_controller(c.Controller):
-    def __init__(self):
-        super(Inspyred_controller, self).__init__("Inspyred")
+    def __init__(self, config):
+        super(Inspyred_controller, self).__init__("Inspyred", config)
         self.n_sonar = 0
         self.linCoefs = []
         self.angCoefs = []

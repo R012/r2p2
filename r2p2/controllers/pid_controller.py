@@ -6,7 +6,7 @@ import json
 from controller import Controller
 
 class Sequential_PID_Controller(Controller):
-    def __init__(self):
+    def __init__(self, config):
         """
             Constructor for the Sequential_PID_Controller class.
             Initializes its goal list and proportionality constants.
@@ -14,7 +14,7 @@ class Sequential_PID_Controller(Controller):
                 - ap, ai, ad: proportionality constants for angular velocity.
                 - lp, li, ld: proportionality constants for linear acceleration.
         """
-        super().__init__("SEQ_PID")
+        super().__init__("SEQ_PID", config)
         with open('../conf/controller-PID.json', 'r') as fp:
             f = json.load(fp)
             self.goal = f['goal']
@@ -267,7 +267,7 @@ class Sequential_PID_Controller(Controller):
         self.robot.x = initial_point[0]
         self.robot.y = initial_point[1]
         
-def path_planning_controller():
+def path_planning_controller(config):
     """
         Factory for a PID controller which uses path planning in order to determine what waypoints must be visited.
         Inputs:
@@ -280,13 +280,14 @@ def path_planning_controller():
         Outputs:
             - A fully configured and ready to use Sequential_PID_Controller object.
     """
-    with open('../conf/controller-pathplanning.json', 'r') as fp:
-        f = json.load(fp)
-        if f['start'] == f['goal']:
-            raise ValueError('Start and goal are the same spot.')
-        controller = Sequential_PID_Controller()
-        if 'mesh' in f['algorithm']:
-            controller.goal=pp.run_path_planning_mesh(f['waypoints'], f['algorithm'], f['start'], f['goal'], f['heuristic'])
-        else:
-            controller.goal=pp.run_path_planning(f['grid_size'], f['algorithm'], f['start'], f['goal'], f['heuristic'])  
+    # Loads the controller config (only 1 expected) and overwrite the parameters with the ones in the scenario (it allows default values to be set at controller)
+    f = {**config['controllers'][0], **config}
+    if f['start'] == f['goal']:
+        raise ValueError('Start and goal are the same spot.')
+    controller = Sequential_PID_Controller(config)
+    if 'mesh' in f['algorithm']:
+        controller.goal=pp.run_path_planning_mesh(f['waypoints'], f['algorithm'], f['start'], f['goal'], f['heuristic'])
+    else:
+        controller.goal=pp.run_path_planning(f['grid_size'], f['algorithm'], f['start'], f['goal'], f['heuristic'])
+        
     return controller

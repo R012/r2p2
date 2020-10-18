@@ -51,7 +51,7 @@ class PDDL_Executor(Sequential_PID_Controller):
         Battery issues can be avoided simply y setting costs to 0 and battery to 1, making it unnecessary
         to recharge.
     """
-    def __init__(self):
+    def __init__(self, config):
         """
             Constructor for the PDDL_Executor.
             Aside from a filepath to the planning to be executed, it takes in

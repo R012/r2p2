@@ -38,13 +38,13 @@ class Naive_Controller(controller.Controller):
         Not really dependable, meant to serve as a simple example
         only.
     """
-    def __init__(self):
+    def __init__(self, config):
         """
             Constructor for the Naive_Controller class.
             Outputs:
                 - A configured Naive_Controller object.
         """
-        super().__init__("NAIVE")
+        super().__init__("NAIVE", config)
 
     def control(self, dst):
         """

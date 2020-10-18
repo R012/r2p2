@@ -47,7 +47,7 @@ import json
 import copy
 from robot import Robot
 import controller
-from controllers.controllers import load_controller
+from controllers.controllers import load_controller, get_controllers
 
 start_time = time.time()
 last_call = time.time()
@@ -124,13 +124,8 @@ def create_controllers():
             - a fully configured Controller object or a list of Controllers, depending on the config
     """
     global npdata
-    if 'class' in config:
-        return load_controller(config['class'])()
-    elif 'controllers' in config and len(config['controllers']) > 0:
-        controllers = []
-        for ctrl in config['controllers']:
-            controllers.append(load_controller(ctrl['class'])())
-        return controllers
+    if 'class' in config or 'controllers' in config:
+        return get_controllers(config)
     else:
         raise KeyError("The configuration file received doesn't contain a \"class\" attribute")
 
