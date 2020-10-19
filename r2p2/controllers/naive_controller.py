@@ -30,9 +30,9 @@ __status__ = "Development"
 __version__ = "0.0.1"
 
 
-import controller
+from controller import Controller, upd_sensor_angles
 
-class Naive_Controller(controller.Controller):
+class Naive_Controller(Controller):
     """
         Class implementing an extremely simple naive controller.
         Not really dependable, meant to serve as a simple example
@@ -46,6 +46,7 @@ class Naive_Controller(controller.Controller):
         """
         super().__init__("NAIVE")
 
+    @upd_sensor_angles
     def control(self, dst):
         """
             Driver function to centralize and standardize the controller. Can be modified by child classes,
