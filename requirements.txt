@@ -4,6 +4,6 @@ matplotlib
 seaborn>=0.9
 scikit-learn
 Pillow
-scipy==1.1.0
+scipy
 inspyred
 pygame
