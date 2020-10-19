@@ -35,7 +35,7 @@ from PIL import Image, ImageDraw, ImageColor
 import numpy as np
 import pygame
 from scipy import ndimage as filters
-from scipy.misc import imshow
+from matplotlib.pyplot import imshow
 from scipy.stats import norm
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
