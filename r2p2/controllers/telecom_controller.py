@@ -12,11 +12,11 @@ class Telecom_Controller(Controller):
         Class representing a teleoperated controller. Simply detects input from keyboard and uses it to control
         the robot.
     """
-    def __init__(self):
+    def __init__(self, config):
         """
             Good old controller. Doesn't need any input.
         """
-        super().__init__("TELECOM")
+        super().__init__("TELECOM", config)
         self.detected_edges = []
         self.cur_detected_edges = []
         self.actual_sensor_angles = []

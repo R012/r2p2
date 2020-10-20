@@ -24,3 +24,19 @@ def load_controller(name):
         for comp in components[1:]:
             controller = getattr(controller, comp)
     return controller
+
+def get_controllers(config):
+    """Create controllers based on the configuration received"""
+    if 'class' in config:
+        # Create the controller passing the config as arg to the constructor
+        return load_controller(config['class'])(config)
+    elif 'controllers' in config and len(config['controllers']) > 0:
+        controllers = []
+        for ctrl in config['controllers']:
+            # Create the controller passing the config as arg to the constructor
+            controller = load_controller(ctrl['class'])(config)
+            controllers.append(controller)
+        return controllers
+
+
+
