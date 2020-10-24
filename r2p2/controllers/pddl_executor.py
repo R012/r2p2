@@ -272,8 +272,7 @@ class PDDL_Executor(Sequential_PID_Controller):
         x = self.map_size[0] - 1 - self.robot.radius if max_spot[0] + self.robot.radius > self.map_size[0] - 1 else x
         y = self.robot.radius if max_spot[1] - self.robot.radius < 0 else max_spot[1]
         y = self.map_size[1] - 1 - self.robot.radius if max_spot[1] + self.robot.radius > self.map_size[1] - 1 else y
-        self.robot.x = x
-        self.robot.y = y
+        self.robot.position(x, y)
         self.log.write("\t>> Moved to "+str((x, y))+"\n")
         print("\t>> Moved to "+str((x, y))+"\n")
         
@@ -307,6 +306,7 @@ class PDDL_Executor(Sequential_PID_Controller):
 
     def register_robot(self, r):
         self.robot = r
-        self.robot.x = self._robot_x * u.npdata.shape[0]/40
-        self.robot.y = self._robot_y * u.npdata.shape[1]/40
+        x = self._robot_x * u.npdata.shape[0]/40
+        y = self._robot_y * u.npdata.shape[1]/40
+        self.robot.position(x, y)
         

@@ -264,8 +264,9 @@ class Sequential_PID_Controller(Controller):
     def register_robot(self, r):
         self.robot = r
         initial_point = self.goal[0]
-        self.robot.x = initial_point[0]
-        self.robot.y = initial_point[1]
+        self.robot.set_position(initial_point[0], initial_point[1])
+        self.robot.set_last_position(initial_point[0], initial_point[1])
+        print(self.robot.last_pos)
         
 def path_planning_controller(config):
     """

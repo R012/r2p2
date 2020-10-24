@@ -224,20 +224,14 @@ def update_loop(robots, npdata):
         else:
             delta = 0.1
         for r in robots:
-            r.get_lock().acquire()
-            r.update(npdata, delta)
-            r.write_stats_to_log()
-            r.get_lock().release()
+            r.update(npdata, delta, True)
         pressed.clear()
         time.sleep(1/80)
 
 def update(robots, npdata):
     delta = calculate_delta()/1000
     for r in robots:
-            r.get_lock().acquire()
-            r.update(npdata, delta)
-            r.write_stats_to_log()
-            r.get_lock().release()
+        r.update(npdata, delta, True)
 
 def animate(robots):
     """
@@ -303,8 +297,8 @@ def display_image(r):
         robots.append(r)
     for robot in robots:
         if robot.controller.goal_oriented():
-            robot.x = robot.controller.goal[0][0]
-            robot.y = robot.controller.goal[0][1]
+            robot.set_position(robot.controller.goal[0][0], robot.controller.goal[0][1])
+
     npdata = np.rot90(npdata)
     npdata = np.flipud(npdata)
     if gui:
