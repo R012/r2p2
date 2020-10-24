@@ -46,7 +46,7 @@ class Controller(ABC):
         Its abstract methods must be implemented. The purpose of registering the corresponding
         robot to it is making it possible to request some lower level data and functionalities.
     """
-    def __init__(self, controller_type = "", config = None):
+    def __init__(self, controller_type = "", config = None, simulator = None):
         """
             Controller type stored as a string mainly for logging purposes. Might also be used
             by specific implementations in order to indentify variations in behavior.
@@ -57,6 +57,8 @@ class Controller(ABC):
         self.actual_sensor_angles = []
         self.ang = []
         self.dst = []
+        print(simulator)
+        self.simulator = simulator
         self.config = config
 
     def control(self, dst):

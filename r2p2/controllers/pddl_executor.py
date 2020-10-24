@@ -41,7 +41,11 @@ import path_planning as pp
 import pygame
 import json
 
+from constants import pddl_exec as constants
+
 labeled = {}
+
+DEFAULT_STEP = constants["DEFAULT_STEP"]
 
 class PDDL_Executor(Sequential_PID_Controller):
     """
@@ -51,7 +55,7 @@ class PDDL_Executor(Sequential_PID_Controller):
         Battery issues can be avoided simply y setting costs to 0 and battery to 1, making it unnecessary
         to recharge.
     """
-    def __init__(self, config):
+    def __init__(self, config, simulator):
         """
             Constructor for the PDDL_Executor.
             Aside from a filepath to the planning to be executed, it takes in
@@ -207,7 +211,7 @@ class PDDL_Executor(Sequential_PID_Controller):
         return self.goal
 
     def __calculate_path(self, dst):
-        step = 40
+        step = DEFAULT_STEP
         shape = u.npdata.shape
         step_x = shape[0]/step
         step_y = shape[1]/step

@@ -38,13 +38,13 @@ class Naive_Controller(Controller):
         Not really dependable, meant to serve as a simple example
         only.
     """
-    def __init__(self, config):
+    def __init__(self, config, simulator):
         """
             Constructor for the Naive_Controller class.
             Outputs:
                 - A configured Naive_Controller object.
         """
-        super().__init__("NAIVE", config)
+        super().__init__("NAIVE", config, simulator)
 
     @upd_sensor_angles
     def control(self, dst):

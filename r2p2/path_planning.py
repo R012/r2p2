@@ -33,8 +33,6 @@ __version__ = "0.0.1"
 import numpy as np
 import math
 
-import utils as u
-
 from node import Node
 
 search_methods = {}
@@ -106,7 +104,7 @@ def generate_grid(npdata, divider):
                 for x in range(int(j*chunk_width), int(j*chunk_width+chunk_width)):
                     npdata[x, y] = row[j]
         grid.append(row)
-    #u.npdata = npdata
+    #npdata = npdata
     return grid, chunk_width, chunk_height
 
 def generate_grid_no_divider(npdata):
@@ -176,7 +174,7 @@ def create_grid_no_divider(npdata):
     grid = g
     return grid
 
-def generate_neighbors(node, nodes):
+def generate_neighbors(npdata, node, nodes):
     """
         Auxiliary function that calculate the neighbors of a given node within a navigation mesh.
         Inputs:
@@ -190,13 +188,13 @@ def generate_neighbors(node, nodes):
         # Calculate the angle of the vector between nodes
         angle = math.degrees(math.atan2(n.point[1] - node.point[1], n.point[0] - node.point[0]))
         if angle in found:  # There was already a node in that angle
-            if u.los_raycasting(node.point, n.point, u.npdata) == (-1, -1): # There is line of sight
+            if u.los_raycasting(node.point, n.point, npdata) == (-1, -1): # There is line of sight
                 new_dist = np.linalg.norm((node.point[0] - n.point[0], node.point[1] - n.point[1]))
                 cur_dist = np.linalg.norm((node.point[0] - found[angle].point[0], node.point[1] - found[angle].point[1]))
                 if new_dist < cur_dist: # We have found a better alternative than what we already had
                     found[angle] = n
         else:
-            if u.los_raycasting(node.point, n.point, u.npdata) is None: # There is line of sight
+            if u.los_raycasting(node.point, n.point, npdata) is None: # There is line of sight
                 found[angle] = n # There was nothing stored, so we just save the current node in that direction
     node.neighbors = found # Replace the list of neighbors so they can be explored later
         
@@ -214,7 +212,7 @@ def generate_navmesh(npdata, waypoints):
     for w in waypoints:
         nodes[tuple(w)] = Node(npdata.item(int(w[0]), int(w[1])), w, w)
     for n in nodes.values():
-        generate_neighbors(n, nodes)
+        generate_neighbors(npdata, n, nodes)
     return nodes
 
 def generate_waypoints_list(algo, start, finish, grid, heur="naive"):
@@ -269,7 +267,7 @@ def generate_waypoints_list_mesh(algo, start, finish, mesh, heur="naive"):
     print("Total nodes expanded: ", expanded_nodes)
     return waypoints
 
-def run_path_planning(grid_size, algo='A*', start=(1, 1), finish=(2,2), heur='naive', show_grid=True):
+def run_path_planning(simulator, grid_size, algo='A*', start=(1, 1), finish=(2,2), heur='naive', show_grid=True):
     """
         Configures and runs a given path planning algorithm over a grid.
         Inputs:
@@ -281,26 +279,27 @@ def run_path_planning(grid_size, algo='A*', start=(1, 1), finish=(2,2), heur='na
         Outputs:
             - ordered list of nodes to be visited representing the planned path.
     """
-    u.npdata = np.rot90(u.npdata)
-    u.npdata = np.flipud(u.npdata)
-    grid = create_grid(u.npdata, grid_size)
+    npdata = simulator.np_img_data
+    npdata = np.rot90(npdata)
+    npdata = np.flipud(npdata)
+    grid = create_grid(npdata, grid_size)
     res = generate_waypoints_list(algo, start, finish, grid, heur)
-    u.npdata = np.flipud(u.npdata)
-    u.npdata = np.rot90(u.npdata, k=3)
+    npdata = np.flipud(npdata)
+    npdata = np.rot90(npdata, k=3)
     div = 10
     if type(grid_size) is list:
-        width, height = u.npdata.shape[0]/grid_size[1], u.npdata.shape[1]/grid_size[0]
+        width, height = npdata.shape[0]/grid_size[1], npdata.shape[1]/grid_size[0]
     else:
-        width, height = u.npdata.shape[0]/grid_size, u.npdata.shape[1]/grid_size
-    '''u.xticks = np.arange(u.npdata.shape[0], step=u.npdata.shape[0]/grid_size*div)
+        width, height = npdata.shape[0]/grid_size, npdata.shape[1]/grid_size
+    '''u.xticks = np.arange(npdata.shape[0], step=npdata.shape[0]/grid_size*div)
     u.xlabels = [div * i for i in range(0, int(len(grid)/div))]
-    u.yticks = np.arange(u.npdata.shape[1], step=u.npdata.shape[1]/grid_size*div)
+    u.yticks = np.arange(npdata.shape[1], step=npdata.shape[1]/grid_size*div)
     u.ylabels = [div * i for i in range(0, int(len(grid[1])/div))]'''
     if show_grid:
-        u.grid_size = [width, height]
+        simulator.grid_size = [width, height]
     return res
 
-def run_path_planning_mesh(mesh_points, algo='A* mesh', start=(1, 1), finish=(2, 2), heur='naive'):
+def run_path_planning_mesh(simulator, mesh_points, algo='A* mesh', start=(1, 1), finish=(2, 2), heur='naive'):
     """
         Configures and runs a given path planning algorithm over a mesh.
         Inputs:
@@ -312,12 +311,13 @@ def run_path_planning_mesh(mesh_points, algo='A* mesh', start=(1, 1), finish=(2,
         Outputs:
             - ordered list of nodes to be visited representing the planned path.
     """
-    u.npdata = np.rot90(u.npdata)
-    u.npdata = np.flipud(u.npdata)
-    mesh = generate_navmesh(u.npdata, mesh_points)
+    npdata = simulator.np_img_data
+    npdata = np.rot90(npdata)
+    npdata = np.flipud(npdata)
+    mesh = generate_navmesh(npdata, mesh_points)
     res = generate_waypoints_list_mesh(algo, start, finish, mesh, heur)
-    u.npdata = np.flipud(u.npdata)
-    u.npdata = np.rot90(u.npdata, k=3)
+    npdata = np.flipud(npdata)
+    npdata = np.rot90(npdata, k=3)
     return res
 
 import heuristics

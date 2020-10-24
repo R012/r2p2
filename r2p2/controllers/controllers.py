@@ -25,18 +25,18 @@ def load_controller(name):
             controller = getattr(controller, comp)
     return controller
 
-def get_controllers(config):
+def get_controllers(simulator):
     """Create controllers based on the configuration received"""
-    if 'class' in config:
-        # Create the controller passing the config as arg to the constructor
-        return load_controller(config['class'])(config)
-    elif 'controllers' in config and len(config['controllers']) > 0:
+    if len(simulator.ctr_cfg) > 0:
         controllers = []
-        for ctrl in config['controllers']:
+        for ctrl in simulator.ctr_cfg:
             # Create the controller passing the config as arg to the constructor
-            controller = load_controller(ctrl['class'])(config)
+            controller = load_controller(ctrl['class'])(ctrl, simulator)
             controllers.append(controller)
         return controllers
+    elif 'controllers' in simulator.cfg and len(simulator.cfg['controllers']) > 0:
+        # Create the controller passing the config as arg to the constructor
+        return load_controller(simulator.cfg['class'])(simulator.cfg, simulator)
 
 
 

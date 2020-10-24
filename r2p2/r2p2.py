@@ -30,6 +30,7 @@ __status__ = "Development"
 __version__ = "1.0.0b"
 
 import utils as u
+from simulator import Simulator
     
 def start_simulation(config='../conf/scenario-default.json'):
     """
@@ -39,6 +40,16 @@ def start_simulation(config='../conf/scenario-default.json'):
 
     """
     u.load_simulation(config)
+
+def start_simulation_new(config_path='../conf/scenario-default.json'):
+    """
+        Launches a simulation using the given configuration file.
+        Inputs:
+            - config: path to the configuration file to be used.
+    """
+    sim = Simulator(config_path)
+    sim.start_simulation()
+
 
 if __name__ == '__main__':
     import argparse
@@ -54,6 +65,6 @@ if __name__ == '__main__':
         print('R2P2 v.'+__version__)
         exit()
     if args.scenario:
-        start_simulation(args.scenario)
+        start_simulation_new(args.scenario)
     else:
-        start_simulation()
+        start_simulation_new()
