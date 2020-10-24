@@ -30,6 +30,8 @@ __status__ = "Development"
 __version__ = "1.0.0b"
 
 import utils as u
+
+from config_manager import ConfigManager
     
 def start_simulation(config='../conf/scenario-default.json'):
     """
@@ -46,14 +48,20 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(\
         description='Run a simulation using a specified scenario.')
     parser.add_argument('--version', action='store_true', \
-            help='Displays the current version of the simulator')
+            help='Displays the current version of the simulator.')
     parser.add_argument('--scenario', metavar='S', nargs='?',\
-        help='path to the configuration JSON in which the scenario is defined.')
+        help='Path to the configuration JSON in which the scenario is defined.')
+    parser.add_argument('--controller', metavar='C', nargs='?',\
+        help='Path to the controller that you want to use. This will override the scenario one if there was any.')
     args = parser.parse_args()
+    
+
     if args.version:
         print('R2P2 v.'+__version__)
         exit()
+    
     if args.scenario:
-        start_simulation(args.scenario)
+        config_mgr = ConfigManager(scenario_config = args.scenario, controller_config = args.controller)
     else:
-        start_simulation()
+        config_mgr = ConfigManager(controller_config = args.controller)
+    start_simulation(config_mgr)

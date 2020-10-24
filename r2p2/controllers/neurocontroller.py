@@ -10,8 +10,8 @@ import controller as c
 import utils as u
 
 class Neuro_controller(c.Controller):
-    def __init__(self):
-        super(Neuro_controller, self).__init__("NEURO")
+    def __init__(self, config):
+        super(Neuro_controller, self).__init__("NEURO", config)
         self.n_sonar = 0
         self.ann = 0
         self.distance = 0
