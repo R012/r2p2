@@ -317,7 +317,8 @@ def display_image(r):
                 if event.type == pygame.KEYDOWN:
                     press(event)
                 if event.type == pygame.KEYUP:
-                    pressed.remove(event.key)
+                    if event.key in pressed:
+                        pressed.remove(event.key)
             
             update(robots, npdata)
             screen.fill((0, 0, 0))
