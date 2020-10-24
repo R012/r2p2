@@ -161,7 +161,6 @@ def create_robot(json_file = '../conf/robot.json', controller = None):
             r.set_color(f['color'])
         return r
 
-
 def init_globals_from_config():
     """
     Initialize all global variables based on config
