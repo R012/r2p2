@@ -1,8 +1,10 @@
 import json
 
 class ConfigManager():
-  def __init__(self, scenario_config = '../conf/scenario-default.json', controller_config = None):
+  def __init__(self, scenario_config = '../conf/scenario-default.json', controller_config = None, params = None):
     self.config = self.__get_json(scenario_config)
+    self.override_with_cli_params(params)
+    print(self.config)
 
     if controller_config:
       print("Using controller from Command Line args")
@@ -11,7 +13,10 @@ class ConfigManager():
       self.__load_controller_conf()
     # Override controllers' params if they are found in the scenario too
     self.__override_with_scen()
-    
+
+  def override_with_cli_params(self, params):
+    self.config = {**self.config, **params}
+
   def get_config(self):
     return self.config
   
