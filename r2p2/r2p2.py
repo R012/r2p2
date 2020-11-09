@@ -61,7 +61,7 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(\
         description='Run a simulation using a specified scenario.',
-        epilog='Any extra argument passed through the CLI will be used to overwrite scenario parameters. Do not enter spaces in the values! Ex: --start [20,10] --test -5.2')
+        epilog='Any extra argument passed through the CLI will be used to overwrite scenario parameters. Do not enter spaces in the values or add quotes! Ex: --start [20,10] --goal "[21, 11]"')
     parser.add_argument('--version', action='store_true', \
             help='Displays the current version of the simulator.')
     parser.add_argument('--scenario', metavar='S', nargs='?',\
