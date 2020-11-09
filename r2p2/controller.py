@@ -136,3 +136,4 @@ def upd_sensor_angles(function):
         self.update_sensor_angles(self.ang, dst)
         return function(self, dst)
     return wrapper
+    return wrapper

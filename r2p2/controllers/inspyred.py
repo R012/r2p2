@@ -70,8 +70,7 @@ class Inspyred_controller(c.Controller):
                 self.time = self.epoch_time
                 self.odom = self.origin
                 self.distance = 0
-                self.robot.x = self.origin[0]
-                self.robot.y = self.origin[1]
+                self.robot.position(self.origin[0], self.origin[1])
                 self.robot.orientation = 0
                 self.robot.stop()
                 self.robot.acceleration = 0

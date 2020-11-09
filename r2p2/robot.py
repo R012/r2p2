@@ -59,9 +59,11 @@ class Robot:
             sensors can either be an integer (representing how many sensors the robot has, assumed to be spaced out evenly),
             or a list of integers (representing the angles to which the robot's sensors are oriented, expressed in degrees.
         """
+        self.lock = lock
         self.identifier = identifier
         self.x = x
         self.y = y
+        self.last_pos = (x, y)
         self.orientation = orientation # Must be an angle in degrees
         self.speed = speed
         self.max_speed = max_speed
@@ -91,9 +93,18 @@ class Robot:
             self.benchmark_log = open("../logs/robot_"+str(self.identifier)+"_benchmark.log", "w+")
         self.last_op_started = 0
         self.controller.register_robot(self)
-        self.last_pos = (x, y)
         self.has_noise = True
-        self.lock = lock
+
+    def set_position(self, x, y):
+        self.lock.acquire()
+        self.x = x
+        self.y = y
+        self.lock.release()
+    
+    def set_last_position(self, x, y):
+        self.lock.acquire()
+        self.last_pos = (x, y)
+        self.lock.release()
 
     def set_color(self, color):
         if type(color) is list:
@@ -241,7 +252,6 @@ class Robot:
             self.collide((self.x, self.y))
         else:
             self.last_pos = (self.x, self.y)
-
         self.__benchmark_time('__update_position')
 
     def __update_angle(self, delta):
@@ -376,13 +386,17 @@ class Robot:
         if abs(self.speed) > self.max_speed:
             self.speed = self.speed/abs(self.speed) * self.max_speed
 
-    def update(self, env, delta):
+    def update(self, env, delta, write_stats = False):
         """
             Controller driver.
             - env: environment data, represented as a matrix
             - delta: time ellapsed since the last update
         """
+        self.lock.acquire()
         self.control(env, delta)
         self.__update_angle(delta)
         #self.__updated_speed(delta)
         self.__update_position(env, delta)
+        if write_stats:
+            self.write_stats_to_log()
+        self.lock.release()

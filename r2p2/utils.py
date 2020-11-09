@@ -47,7 +47,7 @@ import json
 import copy
 from robot import Robot
 import controller
-from controllers.controllers import load_controller, get_controllers
+from controllers.controllers import get_controllers
 
 start_time = time.time()
 last_call = time.time()
@@ -161,29 +161,6 @@ def create_robot(json_file = '../conf/robot.json', controller = None):
             r.set_color(f['color'])
         return r
 
-def load_config(json_file='../conf/config.json'):
-    """
-        Load the scenario configuration in the global variable "config" and add a "controllers" list
-        with the configuration of the controllers included in that scenario.
-        - "controller" might contain a string with a single path or a list of paths
-    """
-    global config
-    with open(json_file, 'r') as scen_cfg:
-        config = json.load(scen_cfg)
-        if 'controller' in config:
-            # If we get a list of controllers
-            if type(config['controller']) is list:
-                for path in config['controller']:
-                    with open(path, 'r') as conf_file:
-                        if 'controllers' in config:
-                            config['controllers'].append(json.load(conf_file))
-                        else:
-                            config['controllers'] = [json.load(conf_file)]
-            # If we only get one controller
-            else:
-                with open(config['controller'], 'r') as conf_file:
-                    config['controllers'] = [json.load(conf_file)]
-        
 def init_globals_from_config():
     """
     Initialize all global variables based on config
@@ -211,7 +188,7 @@ def create_robots(controllers):
         r = create_robot(config['robot'], controllers[0])
     return r
 
-def load_simulation(json_file='../conf/config.json'):
+def load_simulation(config_mgr):
     """
         Loads a simulation using a configuration file. For the time being, it limits itself to loading the corresponding map and robot.
         Inputs:
@@ -220,9 +197,9 @@ def load_simulation(json_file='../conf/config.json'):
                 * stage: string defining the path to the image file that represents the stage to be loaded.
                 * robot: string defining the path to the configuration file of the robot that will be used.
     """
-    global gui, npdata, co2_center, showFPS
+    global gui, npdata, co2_center, showFPS, config
     # Load the config in the global variable
-    load_config(json_file)
+    config = config_mgr.get_config()
     # Init global variables based on config dict
     # TODO: I think we should refactor everything to only use config as global (Pedro)
     init_globals_from_config()
@@ -246,20 +223,14 @@ def update_loop(robots, npdata):
         else:
             delta = 0.1
         for r in robots:
-            r.get_lock().acquire()
-            r.update(npdata, delta)
-            r.write_stats_to_log()
-            r.get_lock().release()
+            r.update(npdata, delta, True)
         pressed.clear()
         time.sleep(1/80)
 
 def update(robots, npdata):
     delta = calculate_delta()/1000
     for r in robots:
-            r.get_lock().acquire()
-            r.update(npdata, delta)
-            r.write_stats_to_log()
-            r.get_lock().release()
+        r.update(npdata, delta, True)
 
 def animate(robots):
     """
@@ -325,8 +296,8 @@ def display_image(r):
         robots.append(r)
     for robot in robots:
         if robot.controller.goal_oriented():
-            robot.x = robot.controller.goal[0][0]
-            robot.y = robot.controller.goal[0][1]
+            robot.set_position(robot.controller.goal[0][0], robot.controller.goal[0][1])
+
     npdata = np.rot90(npdata)
     npdata = np.flipud(npdata)
     if gui:
@@ -345,7 +316,8 @@ def display_image(r):
                 if event.type == pygame.KEYDOWN:
                     press(event)
                 if event.type == pygame.KEYUP:
-                    pressed.remove(event.key)
+                    if event.key in pressed:
+                        pressed.remove(event.key)
             
             update(robots, npdata)
             screen.fill((0, 0, 0))
