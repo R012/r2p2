@@ -29,6 +29,7 @@ __maintainer__ = "Mario Cobos Maestre"
 __status__ = "Development"
 __version__ = "1.0.0b"
 
+import json
 import utils as u
 
 from config_manager import ConfigManager
@@ -42,26 +43,40 @@ def start_simulation(config='../conf/scenario-default.json'):
     """
     u.load_simulation(config)
 
+def args_list_to_dict(args: list):
+    dictionary = {}
+    for x in range(int(len(args)/2)):
+        key_pos = x*2
+        val_pos = x*2+1
+
+        # Removing hiphens on the left
+        key = args[key_pos].lstrip('-')
+        # Casting the value as json to accept plain parameters, lists, objects, nested objects...
+        val = json.loads(args[val_pos])
+        dictionary[key] = val
+    return dictionary
+
 if __name__ == '__main__':
     import argparse
 
     parser = argparse.ArgumentParser(\
-        description='Run a simulation using a specified scenario.')
+        description='Run a simulation using a specified scenario.',
+        epilog='Any extra argument passed through the CLI will be used to overwrite scenario parameters. Do not enter spaces in the values or add quotes! Ex: --start [20,10] --goal "[21, 11]"')
     parser.add_argument('--version', action='store_true', \
             help='Displays the current version of the simulator.')
     parser.add_argument('--scenario', metavar='S', nargs='?',\
         help='Path to the configuration JSON in which the scenario is defined.')
     parser.add_argument('--controller', metavar='C', nargs='?',\
         help='Path to the controller that you want to use. This will override the scenario one if there was any.')
-    args = parser.parse_args()
-    
+    args, unknown = parser.parse_known_args()
+    unknown_args = args_list_to_dict(unknown)
 
     if args.version:
         print('R2P2 v.'+__version__)
         exit()
     
     if args.scenario:
-        config_mgr = ConfigManager(scenario_config = args.scenario, controller_config = args.controller)
+        config_mgr = ConfigManager(scenario_config = args.scenario, controller_config = args.controller, params = unknown_args)
     else:
-        config_mgr = ConfigManager(controller_config = args.controller)
+        config_mgr = ConfigManager(controller_config = args.controller, params = unknown_args)
     start_simulation(config_mgr)
