@@ -65,7 +65,7 @@ class PDDL_Executor(Sequential_PID_Controller):
                 - picture_cost: amount of battery that must be spent in order to take a picture.
                 - filepath: path to the file contaning the planning that will be executed.
         """
-        super(PDDL_Executor, self).__init__()
+        super(PDDL_Executor, self).__init__(config)
         self.type = "PDDL"
         self.goal = []
         self.map_size = u.npdata.shape
@@ -308,5 +308,5 @@ class PDDL_Executor(Sequential_PID_Controller):
         self.robot = r
         x = self._robot_x * u.npdata.shape[0]/40
         y = self._robot_y * u.npdata.shape[1]/40
-        self.robot.position(x, y)
+        self.robot.set_position(x, y)
         
