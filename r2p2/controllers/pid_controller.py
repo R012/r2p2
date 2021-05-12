@@ -35,6 +35,7 @@ class Sequential_PID_Controller(Controller):
             self.cur_detected_edges_distances = []
             self.target_angle = 0
             self.state = 0
+            self.backing = False
 
     def control(self, dst):
         """
@@ -44,6 +45,9 @@ class Sequential_PID_Controller(Controller):
             state machine that needs to be managed.
         """
         super().control(dst)
+        if self.backing:
+            self.backing -= 1
+            return self.robot.orientation, -self.robot.max_speed
         self.manage_state(self.dst)
         if self.state is 0 or self.state is 2:
             return self.control_advance(self.ang, dst)
@@ -159,6 +163,9 @@ class Sequential_PID_Controller(Controller):
         for e in col:
             if e not in self.detected_edges:
                 self.detected_edges.append(e)
+
+    def on_collision(self, pos):
+        self.backing=10
 
     def has_edge_list(self):
         """
