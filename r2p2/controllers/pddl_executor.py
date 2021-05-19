@@ -243,10 +243,10 @@ class PDDL_Executor(Sequential_PID_Controller):
                 tasks.append(split_line[0].replace('(', '').replace(')', ''))
                 if tasks[-1].lower() == 'move':
                     if first_move:
-                        c = split_line[2].replace('p', '').replace(')', '')
+                        c = split_line[2].lower().replace('p', '').replace(')', '')
                         self._robot_x, self._robot_y = (int(c[:2]), int(c[2:]))
                         first_move = False
-                    coords = split_line[3].replace('p', '').replace(')', '')
+                    coords = split_line[3].lower().replace('p', '').replace(')', '')
                     tasks[-1] = (tasks[-1], (int(coords[:2]), int(coords[2:])))
         print("TASKS:")
         print(tasks)
