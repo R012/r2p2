@@ -1,4 +1,6 @@
 {
 	"class": "pddl_executor.PDDL_Executor",
-	"plan_path": "../res/planning.txt"
+	"plan_path": "../res/planning.txt",
+	"algorithm": "A*",
+	"heur": "naive"
 }

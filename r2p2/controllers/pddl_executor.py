@@ -71,6 +71,14 @@ class PDDL_Executor(Sequential_PID_Controller):
         self.map_size = u.npdata.shape
         with open('../conf/controller-planning.json', 'r') as fp:
             f = json.load(fp)
+            if 'algorithm' in f:
+                self.__algo = f['algorithm']
+            else:
+                self.__algo = 'A*'
+            if 'heuristic' in f:
+                self.__heur = f['heuristic']
+            else:
+                self.__heur = 'naive'
             self.tasks = self.__generate_task_list(f['plan_path'])
         self.log = open('../logs/planning_execution.log', 'w')
         self.actions = {}
@@ -211,7 +219,7 @@ class PDDL_Executor(Sequential_PID_Controller):
         shape = u.npdata.shape
         step_x = shape[0]/step
         step_y = shape[1]/step
-        self.goal = pp.run_path_planning(step,
+        self.goal = pp.run_path_planning(step, algo=self.__algo, heur=self.__heur,
                                          start=(int(self.robot.x/step_x), int(self.robot.y/step_y)),
                                          finish=(int(dst[0]), int(dst[1])),
                                          show_grid=True)
