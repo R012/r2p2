@@ -5,7 +5,7 @@
 	"gui": true,
 	"algorithm": "A*",
 	"heuristic": "naive",
-	"start": [18, 13],
-	"goal": [11, 20],
+	"start": [18, 19],
+	"goal": [12, 12],
 	"grid_size": 32
 }

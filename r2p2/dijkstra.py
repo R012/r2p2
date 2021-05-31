@@ -43,7 +43,7 @@ def neighbors(point,grid):
         Outputs:
             - generated list of neighbors
     """
-    x,y = point.grid_point
+    x,y = point.get_grid_coords()
     if x > 0 and x < len(grid) - 1:
         if y > 0 and y < len(grid[0]) - 1:
             links = [grid[d[0]][d[1]] for d in\

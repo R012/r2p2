@@ -29,6 +29,8 @@ __version__ = "0.0.1"
 
 import numpy as np
 
+MAX_THRESHOLD = 9
+
 '''
     Standalone definition of the Node class.
 '''
@@ -61,13 +63,16 @@ class Node:
         '''
         self.value = int(9 - value/255 * 8)
         self.point = tuple(point)
-        self.grid_point = tuple(grid_point)
+        self.__grid_point = tuple(grid_point)
         self.parent = None
         self.H = 0
         self.G = 0
         self.neighbors = {}
+
+    def get_grid_coords(self):
+        return self.__grid_point
         
-    def move_cost(self,other):
+    def move_cost(self, other, terrain=False):
         '''
             Calculates the cost to move from this node to another arbitrary node.
             It depends on the distance between them, and the value of the current
@@ -79,9 +84,12 @@ class Node:
                 the other.
         '''
         v = 0 if self.value == 1 else self.value/9
-        dist = np.linalg.norm((self.grid_point[0] - other.grid_point[0],\
-                               self.grid_point[1] - other.grid_point[1]))
-        return  dist + v
+        cost = np.linalg.norm((self.get_grid_coords()[0] - other.get_grid_coords()[0],\
+                               self.get_grid_coords()[1] - other.get_grid_coords()[1]))
+        if terrain: # If the user wants to include cost based terrain, add it
+            cost += v
+
+        return cost
 
     def register_neighbor(self, neighbor):
         '''
@@ -90,6 +98,14 @@ class Node:
                 - neighbor: node to be registered as neighbor.
         '''
         self.neighbors[neighbor.point] = neighbor
+
+    def is_blocked(self, threshold=9):
+        if threshold > MAX_THRESHOLD:
+            threshold = MAX_THRESHOLD
+        if threshold < 2:
+            threshold = 2
+
+        return self.value >= threshold
 
     def __repr__(self):
         return str(self.point)

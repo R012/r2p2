@@ -42,7 +42,7 @@ def children(point,grid):
         Outputs:
             - list of children for the given node.
     """
-    x,y = point.grid_point
+    x,y = point.get_grid_coords()
     if x > 0 and x < len(grid) - 1:
         if y > 0 and y < len(grid[0]) - 1:
             links = [grid[d[0]][d[1]] for d in\
@@ -190,7 +190,7 @@ def aStar_mesh(start, goal, grid, heur='naive'):
                 continue
             #Otherwise if it is already in the open set
             if node in openset:
-                #Check if we beat the G score 
+                #Check if we beat the G score
                 new_g = current.G + current.move_cost(node)
                 if node.G > new_g:
                     #If so, update the node to have a new parent
