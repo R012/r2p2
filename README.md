@@ -63,6 +63,13 @@ Changing the simulated scenario is straitfoorward, just use the scenario paramet
 ```Bash
 python r2p2.py --scenario [path to scenario configuration JSON]
 ```
+You might want to run some scenario to get familiarized with R2P2 capabilities
+
+- scenario-default.json
+- scenario-sandbox.json
+- scenario-PID.json
+- scenario-pathplanning.json
+- scenario-planning.json
 
 Additionally, if you would like to see the program's help, you may execute
 
@@ -76,6 +83,7 @@ python r2p2.py -h
 ```
 
 Finally, if you would like to check the current version, use
+
 ```Bash
 python r2p2.py --version
 ```
