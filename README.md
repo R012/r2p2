@@ -71,6 +71,8 @@ You might want to run some scenario to get familiarized with R2P2 capabilities
 - scenario-pathplanning.json
 - scenario-planning.json
 
+They are stored in the `conf` folder, that should be included in the command, for instance, ```python r2p2.py --scenario ../conf/scenario-sandbox.json'''.
+
 Additionally, if you would like to see the program's help, you may execute
 
 ```Bash
