@@ -73,6 +73,12 @@ You might want to run some scenario to get familiarized with R2P2 capabilities
 
 They are stored in the `conf` folder, that should be included in the command, for instance, `python r2p2.py --scenario ../conf/scenario-sandbox.json`.
 
+A scenario defines a robot and a controler. The controller can be changed directly by the command line. We can use the naive controller with the default scenario as follows.
+
+```Bash
+python r2p2.py --controler python r2p2.py --controller ../conf/controller-naive.json
+```
+
 Additionally, if you would like to see the program's help, you may execute
 
 ```Bash
