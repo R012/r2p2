@@ -58,7 +58,7 @@ python r2p2.py
 which runs a default scenario with a teleoperated robot on it. You can command 
 the robot by using the arrows keys in the keyboard or a joystick.
 
-Changing the simulated scenario is straitfoorward, just use the scenario parameter.
+Changing the simulated scenario is straitforward, just use the scenario parameter.
 
 ```Bash
 python r2p2.py --scenario [path to scenario configuration JSON]
