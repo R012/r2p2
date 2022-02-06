@@ -58,10 +58,25 @@ python r2p2.py
 which runs a default scenario with a teleoperated robot on it. You can command 
 the robot by using the arrows keys in the keyboard or a joystick.
 
-Changing the simulated scenario is straitfoorward, just use the scenario parameter.
+Changing the simulated scenario is straitforward, just use the scenario parameter.
 
 ```Bash
 python r2p2.py --scenario [path to scenario configuration JSON]
+```
+You might want to run some scenario to get familiarized with R2P2 capabilities
+
+- scenario-default.json
+- scenario-sandbox.json
+- scenario-PID.json
+- scenario-pathplanning.json
+- scenario-planning.json
+
+Scenarios are stored in the `conf` folder, along with controllers and robot definitions. The folder should be included in the command, for instance, `python r2p2.py --scenario ../conf/scenario-sandbox.json`.
+
+A scenario defines a robot and a controler. The controller can be changed directly by the command line. We can use the naive controller with the default scenario as follows.
+
+```Bash
+python r2p2.py --controler python r2p2.py --controller ../conf/controller-naive.json
 ```
 
 Additionally, if you would like to see the program's help, you may execute
@@ -76,6 +91,7 @@ python r2p2.py -h
 ```
 
 Finally, if you would like to check the current version, use
+
 ```Bash
 python r2p2.py --version
 ```
