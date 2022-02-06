@@ -45,6 +45,7 @@ import time
 import math
 import json
 import copy
+import os
 from robot import Robot
 import controller
 from controllers.controllers import get_controllers
@@ -307,6 +308,10 @@ def display_image(r):
         size = img.size
         img = pygame.image.fromstring(img.tobytes("raw", 'RGB'), size, 'RGB')
         screen = pygame.display.set_mode(size)
+        BASE_PATH = os.path.dirname(os.path.abspath(__file__))
+        image_path = os.path.join(BASE_PATH, "../res/isg-marca-color-positivo-100.png")
+        logo = pygame.image.load(image_path)
+        pygame.display.set_icon(logo)
         font = pygame.font.SysFont("BitstreamVeraSans Roman", 23)
         while True:
             for event in pygame.event.get():
